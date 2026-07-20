@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/16 10:05:26 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/17 12:13:27 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,18 @@ typedef struct s_dongle
 
 }					t_dongle;
 
-typedef struct s_codeur
+typedef struct s_coders
 {
-	pthread_t		thread;
 	int				id_codeur;
-	long last_compile_start; // derniere compilation
+	long 			last_compile_start; // derniere compilation
 	int				number_of_compiles;
 	t_etat			current_status;
-	pthread_mutex_t	acces;
+	pthread_t		thread;
+	pthread_mutex_t	acces_coder;
 	t_dongle		*left_dongle;
 	t_dongle		*right_dongle;
 
-}					t_codeur;
+}					t_coders;
 
 typedef struct s_hall
 {
@@ -58,22 +58,28 @@ typedef struct s_hall
 	pthread_cond_t sonnette_pass;
 		// sert a reveiller un codeurqui attend un badge
 	t_dongle		*dongles;
-	t_codeur		*codeurs;
+	t_coders		*coders;
 	pthread_mutex_t	secu_log;
 	int				number_of_coders;
 	long			time_to_burnout;
 	long			time_to_compile;
 	long			time_to_debug;
 	long			time_to_refactor;
-	long			dongle_cooldown;
 	int				number_of_compiles_required;
+	long			dongle_cooldown;
 	t_scheduler		scheduler;
 
 }					t_hall;
 
-int			ft_isdigit(int c);
-int			print_error(char *msg, char *arg);
+void		print_struct(t_hall *hall);
+void		free_dongle(t_hall *hall, int index);
+void		free_coder(t_hall *hall, int index);
+
+int			print_error_parse(char *msg, char *arg);
+int 		print_err(char *msg1, char *msg2);
 int			parse_intput(int argc, char **argv);
 int			converted_and_stock_arg(char **argv, t_hall *hall);
+int			init_dongles(t_hall *hall);
+int			init_coders(t_hall *hall);
 
 #endif
