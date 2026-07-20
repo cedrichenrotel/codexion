@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 17:16:13 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/20 08:11:05 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/20 17:46:06 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@
 int	print_error_parse(char *msg, char *arg)
 {
 	fprintf(stderr, "[ERROR] parser.c: %s -> '%s'\n", msg, arg);
-	return (0);
+	return (ERROR);
 }
 
 int	print_err(char *msg1, char *msg2)
 {
 	fprintf(stderr, "[ERROR] %s: %s\n", msg1, msg2);
-	return (0);
+	return (ERROR);
 }
 
 void	print_struct(t_hall *hall)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dongles.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 12:20:26 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/20 08:59:09 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/20 17:40:30 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ static	int	init(t_dongle *dongle)
 	if (pthread_mutex_init(&dongle->acces_dongle, NULL) != 0
 		|| pthread_cond_init(&dongle->sonnets, NULL) != 0)
 		return (print_err("dongles.c", "Failed init dongle"));
-	return (1);
+	return (SUCCESS);
 }
-
+/*allocation et initialisation d'un tableau t_dongles[] */
 int	init_dongles(t_hall *hall)
 {
 	int	nb_dongle;
@@ -54,9 +54,9 @@ int	init_dongles(t_hall *hall)
 		if (!init(&hall->dongles[i]))
 		{
 			free_dongle(hall, i);
-			return (0);
+			return (ERROR);
 		}
 		i++;
 	}
-	return (1);
+	return (SUCCESS);
 }

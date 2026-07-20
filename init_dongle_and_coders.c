@@ -1,37 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   init_dongle_and_coders.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/14 17:07:12 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/20 17:58:11 by cehenrot         ###   ########.fr       */
+/*   Created: 2026/07/20 16:23:32 by cehenrot          #+#    #+#             */
+/*   Updated: 2026/07/20 17:40:57 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-#include <stdio.h>
-#include <stdlib.h>
 
-int	main(int argc, char **argv)
+/*appel des fonctions qui permet initialiser les tableau de structure des
+dongle et des coders. Libert la memoire si probleme d allocation*/
+int	init_dongle_and_coders(t_hall *hall)
 {
-	t_hall	hall;
-	int	i;
-
-	if (!parse_intput(argc, argv))
+	if (!init_dongles(hall))
 		return (ERROR);
-	if (converted_and_stock_arg(argv, &hall))
+	if (!init_coders(hall))
 	{
-		if (!init_dongle_and_coders(&hall))
-			return (ERROR);
-		if (!run_coders)
-			return (ERROR);
-		
-	}
-	else
+		free_dongle(hall, hall->number_of_coders);
 		return (ERROR);
-	free_dongle(&hall, hall.number_of_coders);
-	free_coder(&hall, hall.number_of_coders);
+	}
 	return (SUCCESS);
 }

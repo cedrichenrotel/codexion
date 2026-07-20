@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:42:48 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/20 11:02:02 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/20 17:39:35 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ static	int	init(t_coders *coders, t_hall *hall, int index)
 	coders->right_dongle = &hall->dongles[index];
 	index_left_dongle = (index - 1 + nb_coders) % nb_coders;
 	coders->left_dongle = &hall->dongles[index_left_dongle];
-	return (1);
+	return (SUCCESS);
 }
-
+/*allocation et initialisation d'un tableau t_coders[] */
 int	init_coders(t_hall *hall)
 {
 	int	nb_coders;
@@ -61,9 +61,9 @@ int	init_coders(t_hall *hall)
 		if (!init(&hall->coders[i], hall, i))
 		{
 			free_coder(hall, i);
-			return (0);
+			return (ERROR);
 		}
 		i++;
 	}
-	return (1);
+	return (SUCCESS);
 }

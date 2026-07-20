@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/20 13:27:17 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/20 17:38:49 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define CODEXION_H
 
 # include <pthread.h>
+
+#define	SUCCESS	1
+#define	ERROR	0
 
 typedef enum e_scheduler
 {
@@ -76,11 +79,13 @@ void		print_struct(t_hall *hall);
 void		free_dongle(t_hall *hall, int index);
 void		free_coder(t_hall *hall, int index);
 
-int			print_error_parse(char *msg, char *arg);
+int			run_coders(t_hall *hall);
+int			init_coders(t_hall *hall);
+int			init_dongles(t_hall *hall);
 int			print_err(char *msg1, char *msg2);
 int			parse_intput(int argc, char **argv);
+int			init_dongle_and_coders(t_hall *hall);
+int			print_error_parse(char *msg, char *arg);
 int			converted_and_stock_arg(char **argv, t_hall *hall);
-int			init_dongles(t_hall *hall);
-int			init_coders(t_hall *hall);
 
 #endif

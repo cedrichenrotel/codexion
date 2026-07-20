@@ -4,7 +4,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread -g
 
 SRC = main.c parser.c utils.c converted_and_stock_arg.c dongles.c coders.c\
-		routine.c\
+		routine.c init_dongle_and_coders.c run_coders.c\
 
 OBJ = $(SRC:.c=.o)
 
