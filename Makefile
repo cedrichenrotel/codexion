@@ -3,7 +3,8 @@ NAME = codexion
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread -g
 
-SRC = main.c parser.c utils.c converted_and_stock_arg.c dongles.c coders.c
+SRC = main.c parser.c utils.c converted_and_stock_arg.c dongles.c coders.c\
+		routine.c\
 
 OBJ = $(SRC:.c=.o)
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 17:07:12 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/17 16:47:04 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/20 13:26:20 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 int	main(int argc, char **argv)
 {
 	t_hall	hall;
+	int	i;
+	int	j;
 
 	if (!parse_intput(argc, argv))
 		return (-1);
@@ -28,6 +30,12 @@ int	main(int argc, char **argv)
 		{
 			free_dongle(&hall, hall.number_of_coders);
 			return (-1);
+		}
+		i = 0;
+		while (i < hall.number_of_coders)
+		{
+			pthread_create(&hall.coders.hread[i], NULL, routine());
+			i++;
 		}
 	}
 	else
