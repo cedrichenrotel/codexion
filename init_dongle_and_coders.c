@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 16:23:32 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 18:34:12 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/21 19:09:58 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 dongle et des coders. Libert la memoire si probleme d allocation*/
 int	init_dongle_and_coders(t_hall *hall)
 {
-	if (!init_hall_locks(hall))
-        return (ERROR);
 	if (!init_dongles(hall))
 		return (ERROR);
 	if (!init_coders(hall))
