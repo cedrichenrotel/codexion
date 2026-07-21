@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 11:14:51 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/21 19:04:45 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,30 +24,33 @@ typedef enum e_scheduler
 	EDF,
 }					t_scheduler;
 
-typedef enum e_etat
+typedef enum e_status
 {
 	ACQUIRING_DONGLES,
 	COMPILING,
 	DEBUGGING,
 	REFACTORING,
 	BURNOUT,
-}					t_etat;
+}					t_status;
 
 typedef struct s_dongle
 {
 	int					accessible;
+	int					index;
 	long				last_release; // dernier relachement
 	pthread_mutex_t		acces_dongle;
-	pthread_cond_t		sonnets;
+	pthread_cond_t		doorbell;
 
 }					t_dongle;
+
+typedef struct s_hall t_hall;
 
 typedef struct s_coders
 {
 	int					id_coder;
 	long				last_compile_start; // derniere compilation
 	int					number_of_compiles;
-	t_etat				current_status;
+	t_status			current_status;
 	pthread_t			thread;
 	pthread_mutex_t		acces_coder;
 	t_dongle			*left_dongle;
@@ -58,10 +61,11 @@ typedef struct s_coders
 
 typedef struct s_hall
 {
-	int					nb_pass; // nombre de passe pour codeur (3/4)
+	int					nb_pass;
+	// protege le compteur partagercontre simultaner par plusieurs threads
 	pthread_mutex_t		secu_nb_pass;
-	pthread_cond_t		sonnette_pass;
-		// sert a reveiller un codeurqui attend un badge
+	// sert a reveiller un codeur qui attend un badge
+	pthread_cond_t		doorbell_pass;
 	t_dongle			*dongles;
 	t_coders			*coders;
 	pthread_mutex_t		secu_log;
@@ -76,6 +80,20 @@ typedef struct s_hall
 
 }					t_hall;
 
+typedef struct s_element
+{
+	long	key;
+	int		id_coder;
+}			t_element;
+
+typedef struct s_heap
+{
+	t_element	*tab_id_coder;
+	int			capacity_max;
+	int			size_actually;
+
+}			t_heap;
+
 void		*routine(void *arg);
 void		print_struct(t_hall *hall);
 void		free_dongle(t_hall *hall, int index);
@@ -88,7 +106,8 @@ int			init_dongles(t_hall *hall);
 int			print_err(char *msg1, char *msg2);
 int			parse_intput(int argc, char **argv);
 int			init_dongle_and_coders(t_hall *hall);
+int			init_hall(char **argv, t_hall *hall);
+int			init_heap(t_hall *hall, t_heap *heap);
 int			print_error_parse(char *msg, char *arg);
-int			converted_and_stock_arg(char **argv, t_hall *hall);
 
 #endif

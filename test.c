@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 09:18:36 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 08:34:57 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/21 16:56:36 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,6 @@ void	*ma_routine(void *arg)
 	return (NULL);
 }
 
- struct {
-	name
-	__USER_LABEL_PREFIX__
-	
- }
 int	main(void)
 {
 	pthread_t	thread[5];

@@ -1,35 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   heap.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/14 17:07:12 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 18:48:57 by cehenrot         ###   ########.fr       */
+/*   Created: 2026/07/21 14:11:20 by cehenrot          #+#    #+#             */
+/*   Updated: 2026/07/21 15:28:57 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-#include <stdio.h>
 #include <stdlib.h>
 
-int	main(int argc, char **argv)
+int init_heap(t_hall *hall, t_heap *heap)
 {
-	t_hall	hall;
-
-	if (!parse_intput(argc, argv))
-		return (ERROR);
-	if (init_hall(argv, &hall))
-	{
-		if (!init_dongle_and_coders(&hall))
-			return (ERROR);
-		if (!run_coders(&hall))
-			return (ERROR);
-		
-	}
-	else
-		return (ERROR);
-	free_tab_coders_and_dongles(&hall);
-	return (SUCCESS);
+	heap->tab_id_coder = malloc(sizeof(t_element) * hall->number_of_coders);
+	if (!heap->tab_id_coder)
+		return(print_err("heap.c", "Allocation failed"));
+	heap->capacity_max = hall->number_of_coders;
+	heap->size_actually = 0;
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 17:05:49 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 10:23:11 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/21 13:13:36 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static	int	start_hall_coders(t_hall *hall)
 	while (i < hall->number_of_coders)
 	{
 		if (pthread_create(&hall->coders[i].thread, NULL, routine,
-			&hall->coders[i] != 0))
+			&hall->coders[i]))
 			return (print_err("run_coders.c", "Failed launch of the coders"));
 		i++;
 	}

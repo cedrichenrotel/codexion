@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dongles.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 12:20:26 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/20 17:40:30 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/21 18:10:35 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,20 @@ void	free_dongle(t_hall *hall, int index)
 	while (i < index)
 	{
 		pthread_mutex_destroy(&hall->dongles[i].acces_dongle);
-		pthread_cond_destroy(&hall->dongles[i].sonnets);
+		pthread_cond_destroy(&hall->dongles[i].doorbell);
 		i++;
 	}
 	free(hall->dongles);
 	hall->dongles = NULL;
 }
 
-static	int	init(t_dongle *dongle)
+static	int	init(t_dongle *dongle, int i)
 {
+	dongle->index = i;
 	dongle->accessible = 1;
 	dongle->last_release = 0;
 	if (pthread_mutex_init(&dongle->acces_dongle, NULL) != 0
-		|| pthread_cond_init(&dongle->sonnets, NULL) != 0)
+		|| pthread_cond_init(&dongle->doorbell, NULL) != 0)
 		return (print_err("dongles.c", "Failed init dongle"));
 	return (SUCCESS);
 }
@@ -51,7 +52,7 @@ int	init_dongles(t_hall *hall)
 	i = 0;
 	while (i < nb_dongle)
 	{
-		if (!init(&hall->dongles[i]))
+		if (!init(&hall->dongles[i], i))
 		{
 			free_dongle(hall, i);
 			return (ERROR);
