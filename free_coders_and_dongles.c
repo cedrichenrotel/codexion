@@ -1,35 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   free_coders_and_dongles.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/14 17:07:12 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 10:19:21 by cehenrot         ###   ########.fr       */
+/*   Created: 2026/07/21 08:04:24 by cehenrot          #+#    #+#             */
+/*   Updated: 2026/07/21 09:30:34 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-#include <stdio.h>
-#include <stdlib.h>
 
-int	main(int argc, char **argv)
+void	free_tab_coders_and_dongles(t_hall *hall)
 {
-	t_hall	hall;
-
-	if (!parse_intput(argc, argv))
-		return (ERROR);
-	if (converted_and_stock_arg(argv, &hall))
-	{
-		if (!init_dongle_and_coders(&hall))
-			return (ERROR);
-		if (!run_coders(&hall))
-			return (ERROR);
-		
-	}
-	else
-		return (ERROR);
-	free_tab_coders_and_dongles(&hall);
-	return (SUCCESS);
+	free_dongle(hall, hall->number_of_coders);
+	free_coder(hall, hall->number_of_coders);
 }

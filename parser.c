@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 14:35:13 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/20 17:45:05 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/21 09:27:35 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ int	parse_arg(char *arg, int index, int argc)
 	}
 	if (index == 1 && atoi(arg) < 2)
 		return (print_error_parse("Insufficient number of encoders", arg));
-	if (index != argc - 1 && !validation_numbers(arg) ||
-		index == argc - 1 && !validation_scheduler(arg))
+	if ((index != argc - 1 && !validation_numbers(arg)) ||
+		(index == argc - 1 && !validation_scheduler(arg)))
 		return (ERROR);
 	return (SUCCESS);
 }

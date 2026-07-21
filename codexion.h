@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/20 17:38:49 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/21 11:14:51 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef enum e_etat
 	COMPILING,
 	DEBUGGING,
 	REFACTORING,
+	BURNOUT,
 }					t_etat;
 
 typedef struct s_dongle
@@ -51,6 +52,7 @@ typedef struct s_coders
 	pthread_mutex_t		acces_coder;
 	t_dongle			*left_dongle;
 	t_dongle			*right_dongle;
+	t_hall				*hall;
 
 }					t_coders;
 
@@ -78,6 +80,7 @@ void		*routine(void *arg);
 void		print_struct(t_hall *hall);
 void		free_dongle(t_hall *hall, int index);
 void		free_coder(t_hall *hall, int index);
+void		free_tab_coders_and_dongles(t_hall *hall);
 
 int			run_coders(t_hall *hall);
 int			init_coders(t_hall *hall);

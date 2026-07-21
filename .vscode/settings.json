@@ -1,12 +1,11 @@
 {
-  // --- Affichage et indentation (norme 42 : vraies tabulations) ---
   "editor.renderWhitespace": "all",
   "editor.insertSpaces": false,
   "editor.tabSize": 4,
   "editor.detectIndentation": false,
-  "editor.rulers": [80],
-
-  // --- C/C++ Runner (flags officiels 42 : -Wall -Wextra -Werror) ---
+  "editor.rulers": [
+    80
+  ],
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/clang",
   "C_Cpp_Runner.cppCompilerPath": "/usr/bin/clang++",
   "C_Cpp_Runner.debuggerPath": "/usr/bin/lldb",

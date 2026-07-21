@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:42:48 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/20 17:39:35 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/21 11:20:42 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@ static	int	init(t_coders *coders, t_hall *hall, int index)
 	int	index_left_dongle;
 
 	nb_coders = hall->number_of_coders;
-	coders->id_coder = index + 1;
+	coders->id_coder = index;
 	coders->last_compile_start = 0;
 	coders->number_of_compiles = 0;
 	coders->current_status = ACQUIRING_DONGLES;
+	coders->hall = hall;
 	if (pthread_mutex_init(&coders->acces_coder, NULL) != 0)
 		return (print_err("dongles.c", "Failed init coder"));
 	coders->right_dongle = &hall->dongles[index];
