@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 17:16:13 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/20 17:46:06 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/22 16:28:19 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,12 @@ void	print_struct(t_hall *hall)
 	printf("temp de recharge: %ld\n", hall -> dongle_cooldown);
 	printf("temp de compil. recom: %d\n", hall -> number_of_compiles_required);
 	printf("planificateur: %d\n", hall -> scheduler);
+}
+/*convertis gettimeofday (seconde+miliseconde) en une seul val en miliseconde*/
+void	get_time_ms(void)
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }

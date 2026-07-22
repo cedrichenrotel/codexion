@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 17:07:12 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 18:48:57 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/22 09:03:30 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ int	main(int argc, char **argv)
 		if (!init_dongle_and_coders(&hall))
 			return (ERROR);
 		if (!run_coders(&hall))
+		{
+			free_tab_coders_and_dongles(&hall);
 			return (ERROR);
+		}
 		
 	}
 	else

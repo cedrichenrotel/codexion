@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 19:04:45 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/22 16:35:50 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CODEXION_H
 
 # include <pthread.h>
+# include <sys/time.h>
 
 #define	SUCCESS	1
 #define	ERROR	0
@@ -33,22 +34,25 @@ typedef enum e_status
 	BURNOUT,
 }					t_status;
 
+typedef struct s_hall t_hall;
+typedef struct s_heap t_heap;
+
 typedef struct s_dongle
 {
 	int					accessible;
 	int					index;
-	long				last_release; // dernier relachement
+	long long			last_release; // dernier relachement
 	pthread_mutex_t		acces_dongle;
 	pthread_cond_t		doorbell;
+	t_heap				tab_priority;
 
 }					t_dongle;
 
-typedef struct s_hall t_hall;
 
 typedef struct s_coders
 {
 	int					id_coder;
-	long				last_compile_start; // derniere compilation
+	long long			last_compile_start; // derniere compilation
 	int					number_of_compiles;
 	t_status			current_status;
 	pthread_t			thread;
@@ -61,29 +65,29 @@ typedef struct s_coders
 
 typedef struct s_hall
 {
-	int					nb_pass;
+	pthread_mutex_t		secu_log;
 	// protege le compteur partagercontre simultaner par plusieurs threads
 	pthread_mutex_t		secu_nb_pass;
 	// sert a reveiller un codeur qui attend un badge
 	pthread_cond_t		doorbell_pass;
 	t_dongle			*dongles;
 	t_coders			*coders;
-	pthread_mutex_t		secu_log;
+	t_scheduler			scheduler;
+	int					nb_pass;
 	int					number_of_coders;
+	int					number_of_compiles_required;
 	long				time_to_burnout;
 	long				time_to_compile;
 	long				time_to_debug;
 	long				time_to_refactor;
-	int					number_of_compiles_required;
 	long				dongle_cooldown;
-	t_scheduler			scheduler;
 
 }					t_hall;
 
 typedef struct s_element
 {
-	long	key;
-	int		id_coder;
+	long long	key;
+	int			id_coder;
 }			t_element;
 
 typedef struct s_heap
@@ -94,10 +98,12 @@ typedef struct s_heap
 
 }			t_heap;
 
+void		get_time_ms(void);
 void		*routine(void *arg);
 void		print_struct(t_hall *hall);
-void		free_dongle(t_hall *hall, int index);
+void		free_mutex_hall(t_hall *hall);
 void		free_coder(t_hall *hall, int index);
+void		free_dongle(t_hall *hall, int index);
 void		free_tab_coders_and_dongles(t_hall *hall);
 
 int			run_coders(t_hall *hall);
@@ -109,5 +115,7 @@ int			init_dongle_and_coders(t_hall *hall);
 int			init_hall(char **argv, t_hall *hall);
 int			init_heap(t_hall *hall, t_heap *heap);
 int			print_error_parse(char *msg, char *arg);
+int			heap_push(t_heap *heap, int id_coder, long long key);
+
 
 #endif

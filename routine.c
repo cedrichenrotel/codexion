@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 09:27:19 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 17:58:25 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/22 16:12:43 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,33 @@
 
 static	void	aquiring_dongles(t_coders *coder)
 {
-	if (coder)
-		return;
-	return;
+	t_dongle	*first;
+	t_dongle	*second;
+	long long	key;
+	long long	deadline;
+
+	/*compare et range dans 2 pointeur en ordre croissant*/
+	if (coder->left_dongle->index < coder->right_dongle->index)
+	{
+		first = coder->left_dongle;
+		second = coder->right_dongle;
+	}
+	else
+	{	
+		first = coder->right_dongle;
+		second = coder->left_dongle;
+	}
+	/*bloc le premier dongle*/
+	pthread_mutex_lock(&first->acces_dongle);
+	deadline = coder->last_compile_start + coder->hall->time_to_burnout;
+	if (coder->hall->scheduler == EDF)
+		key = deadline;
+	else
+		key = get_time_ms();
+	
+	/*mettre dongle comme prioriter*/
+	heap_push(&first->tab_priority, coder->id_coder, key);
+
 }
 
 void	*routine(void *arg)
@@ -38,15 +62,15 @@ void	*routine(void *arg)
 	{
 		if (coder->current_status == ACQUIRING_DONGLES)
 			aquiring_dongles(coder);
-		else if (coder->current_status == COMPILING)
-			compiling(&coder);
-		else if (coder->current_status == DEBUGGING)
-			debugging(&coder);
-		else if (coder->current_status == REFACTORING)
-			refactoring(&coder);
+		// else if (coder->current_status == COMPILING)
+		// 	compiling(coder);
+		// else if (coder->current_status == DEBUGGING)
+		// 	debugging(coder);
+		// else if (coder->current_status == REFACTORING)
+		// 	refactoring(coder);
 		else
 		{
-			check_burnout(&coder);
+			//check_burnout(&coder);
 			break;
 		}
 			

@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:42:48 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 11:20:42 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/22 07:36:31 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static	int	init(t_coders *coders, t_hall *hall, int index)
 	coders->current_status = ACQUIRING_DONGLES;
 	coders->hall = hall;
 	if (pthread_mutex_init(&coders->acces_coder, NULL) != 0)
-		return (print_err("dongles.c", "Failed init coder"));
+		return (print_err("coders.c", "Failed init coder"));
 	coders->right_dongle = &hall->dongles[index];
 	index_left_dongle = (index - 1 + nb_coders) % nb_coders;
 	coders->left_dongle = &hall->dongles[index_left_dongle];

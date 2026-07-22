@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/15 17:55:16 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 19:10:05 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/22 10:29:39 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,13 @@ static int	init_hall_locks(t_hall *hall)
 		return (print_err("init_hall.c", "Failed init secu_log"));
 	}
 	return (SUCCESS);
+}
+
+void	free_mutex_hall(t_hall *hall)
+{
+	pthread_mutex_destroy(&hall->secu_log);
+	pthread_mutex_destroy(&hall->secu_nb_pass);
+	pthread_cond_destroy(&hall->doorbell_pass);
 }
 
 int	init_hall(char **argv, t_hall *hall)
