@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/22 16:35:50 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/23 10:58:09 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct s_dongle
 	long long			last_release; // dernier relachement
 	pthread_mutex_t		acces_dongle;
 	pthread_cond_t		doorbell;
-	t_heap				tab_priority;
+	t_heap				*tab_priority;
 
 }					t_dongle;
 
@@ -98,7 +98,6 @@ typedef struct s_heap
 
 }			t_heap;
 
-void		get_time_ms(void);
 void		*routine(void *arg);
 void		print_struct(t_hall *hall);
 void		free_mutex_hall(t_hall *hall);
@@ -117,5 +116,6 @@ int			init_heap(t_hall *hall, t_heap *heap);
 int			print_error_parse(char *msg, char *arg);
 int			heap_push(t_heap *heap, int id_coder, long long key);
 
+long long		get_time_ms(void);
 
 #endif

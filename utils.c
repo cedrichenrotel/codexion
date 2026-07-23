@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 17:16:13 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/22 16:28:19 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/23 10:07:23 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ void	print_struct(t_hall *hall)
 	printf("planificateur: %d\n", hall -> scheduler);
 }
 /*convertis gettimeofday (seconde+miliseconde) en une seul val en miliseconde*/
-void	get_time_ms(void)
+long long	get_time_ms(void)
 {
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
-	tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }

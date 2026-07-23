@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 12:20:26 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/22 08:03:55 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/23 11:00:10 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	free_dongle(t_hall *hall, int index)
 	hall->dongles = NULL;
 }
 
-static	int	init(t_dongle *dongle, int i)
+static	int	init(t_dongle *dongle, t_hall *hall, int i)
 {
 	dongle->index = i;
 	dongle->accessible = 1;
@@ -37,6 +37,8 @@ static	int	init(t_dongle *dongle, int i)
 	if (pthread_mutex_init(&dongle->acces_dongle, NULL) != 0
 		|| pthread_cond_init(&dongle->doorbell, NULL) != 0)
 		return (print_err("dongles.c", "Failed init dongle"));
+	if(!init_heap(hall, dongle->tab_priority))
+		return (print_err("dongles.c", "Failed tab_priority"));
 	return (SUCCESS);
 }
 /*allocation et initialisation d'un tableau t_dongles[] */
@@ -52,7 +54,7 @@ int	init_dongles(t_hall *hall)
 	i = 0;
 	while (i < nb_dongle)
 	{
-		if (!init(&hall->dongles[i], i))
+		if (!init(&hall->dongles[i], hall, i))
 		{
 			free_dongle(hall, i);
 			return (ERROR);

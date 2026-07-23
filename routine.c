@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 09:27:19 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/22 16:12:43 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/23 12:48:16 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,18 @@ static	void	aquiring_dongles(t_coders *coder)
 		key = get_time_ms();
 	
 	/*mettre dongle comme prioriter*/
-	heap_push(&first->tab_priority, coder->id_coder, key);
+	heap_push(first->tab_priority, coder->id_coder, key);
+	
+	/*valider les 3 conditions simultanner pour recuperer dongle
+		-si id-coder n est pas en test de liste de prioriter
+		-si le premier dongle est accessible
+		-si le temp de repos n est pas respecter*/
+	while (first->tab_priority->tab_id_coder[0].id_coder != coder->id_coder
+		|| !first->accessible
+		|| get_time_ms() - first->last_release < coder->hall->dongle_cooldown)
+	{
+		
+	}
 
 }
 
@@ -68,13 +79,13 @@ void	*routine(void *arg)
 		// 	debugging(coder);
 		// else if (coder->current_status == REFACTORING)
 		// 	refactoring(coder);
-		else
-		{
-			//check_burnout(&coder);
-			break;
-		}
+		// else
+		// {
+		// 	//check_burnout(&coder);
+		// 	break;
+		// }
 			
 		coder->number_of_compiles ++;
 	}
-	return (arg); // a virer
+	return (arg);
 }
