@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 09:27:19 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/23 12:48:16 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/23 13:48:01 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static	void	aquiring_dongles(t_coders *coder)
 	t_dongle	*second;
 	long long	key;
 	long long	deadline;
+	struct timespec cooldown_time;
 
 	/*compare et range dans 2 pointeur en ordre croissant*/
 	if (coder->left_dongle->index < coder->right_dongle->index)
@@ -52,20 +53,24 @@ static	void	aquiring_dongles(t_coders *coder)
 		|| !first->accessible
 		|| get_time_ms() - first->last_release < coder->hall->dongle_cooldown)
 	{
-		
+		cooldown_time.tv_sec = (get_time_ms() + 50) / 1000; //donne les secondes entières
+		cooldown_time.tv_nsec = ((get_time_ms() + 50) % 1000) * 1000000; //donne le reste en nanosecondes
+		pthread_cond_timedwait(&first->doorbell, &first->acces_dongle
+			, &cooldown_time); /*permet: 1. mettre le coder en pause
+										 2. libert temporairement le mutex
+										 3. réveille automatiquement après un court délai pour re-tester la condition*/
 	}
 
 }
 
+/*Fonction exécutée par chaque thread coder — c'est son
+cycle de vie complet. Elle doit faire tourner le coder en boucle à travers
+les états ACQUIRING_DONGLES → COMPILING → ..., en gérant l'acquisition sans
+deadlock de ses deux dongles voisins, jusqu'à ce qu'il ait atteint
+number_of_compiles_required (ou qu'il "meure" de burnout faute d'avoir
+compilé à temps)*/
 void	*routine(void *arg)
 {
-	/*Fonction exécutée par chaque thread coder — c'est son
-	cycle de vie complet. Elle doit faire tourner le coder en boucle à travers
-	les états ACQUIRING_DONGLES → COMPILING → ..., en gérant l'acquisition sans
-	deadlock de ses deux dongles voisins, jusqu'à ce qu'il ait atteint
-	number_of_compiles_required (ou qu'il "meure" de burnout faute d'avoir
-	compilé à temps)*/
-
 	t_coders *coder = (t_coders *)arg;
 	// t_hall	*hall = coder->hall;
 	
