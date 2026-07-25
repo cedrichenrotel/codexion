@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/23 10:58:09 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/24 11:51:50 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_coders
 typedef struct s_hall
 {
 	pthread_mutex_t		secu_log;
-	// protege le compteur partagercontre simultaner par plusieurs threads
+	// protege le compteur partager contre simultaner par plusieurs threads
 	pthread_mutex_t		secu_nb_pass;
 	// sert a reveiller un codeur qui attend un badge
 	pthread_cond_t		doorbell_pass;
@@ -104,6 +104,7 @@ void		free_mutex_hall(t_hall *hall);
 void		free_coder(t_hall *hall, int index);
 void		free_dongle(t_hall *hall, int index);
 void		free_tab_coders_and_dongles(t_hall *hall);
+void		aquiring_dongles(t_coders *coder);
 
 int			run_coders(t_hall *hall);
 int			init_coders(t_hall *hall);

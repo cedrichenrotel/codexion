@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dongles.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 12:20:26 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/23 11:00:10 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/24 15:36:48 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	free_dongle(t_hall *hall, int index)
 	{
 		pthread_mutex_destroy(&hall->dongles[i].acces_dongle);
 		pthread_cond_destroy(&hall->dongles[i].doorbell);
+		free(hall->dongles[i].tab_priority->tab_id_coder);
+		free(hall->dongles[i].tab_priority);
 		i++;
 	}
 	free(hall->dongles);
@@ -34,6 +36,9 @@ static	int	init(t_dongle *dongle, t_hall *hall, int i)
 	dongle->index = i;
 	dongle->accessible = 1;
 	dongle->last_release = 0;
+	dongle->tab_priority = malloc(sizeof(t_heap));
+	if (!dongle->tab_priority)
+		return (ERROR);
 	if (pthread_mutex_init(&dongle->acces_dongle, NULL) != 0
 		|| pthread_cond_init(&dongle->doorbell, NULL) != 0)
 		return (print_err("dongles.c", "Failed init dongle"));
