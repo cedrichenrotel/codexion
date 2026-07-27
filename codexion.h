@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/24 11:51:50 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/27 18:50:43 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,22 +65,22 @@ typedef struct s_coders
 
 typedef struct s_hall
 {
-	pthread_mutex_t		secu_log;
+	pthread_mutex_t				secu_log;
 	// protege le compteur partager contre simultaner par plusieurs threads
-	pthread_mutex_t		secu_nb_pass;
+	pthread_mutex_t				secu_nb_pass;
 	// sert a reveiller un codeur qui attend un badge
-	pthread_cond_t		doorbell_pass;
-	t_dongle			*dongles;
-	t_coders			*coders;
-	t_scheduler			scheduler;
-	int					nb_pass;
-	int					number_of_coders;
-	int					number_of_compiles_required;
-	long				time_to_burnout;
-	long				time_to_compile;
-	long				time_to_debug;
-	long				time_to_refactor;
-	long				dongle_cooldown;
+	pthread_cond_t				doorbell_pass;
+	t_dongle					*dongles;
+	t_coders					*coders;
+	t_scheduler					scheduler;
+	int							nb_pass;
+	int							number_of_coders;
+	int							number_of_compiles_required;
+	long	long				time_to_burnout;
+	long	long				time_to_compile;
+	long	long				time_to_debug;
+	long	long				time_to_refactor;
+	long	long				dongle_cooldown;
 
 }					t_hall;
 
@@ -88,6 +88,7 @@ typedef struct s_element
 {
 	long long	key;
 	int			id_coder;
+
 }			t_element;
 
 typedef struct s_heap
@@ -100,15 +101,19 @@ typedef struct s_heap
 
 void		*routine(void *arg);
 void		print_struct(t_hall *hall);
+void		compiling(t_coders *coder);
 void		free_mutex_hall(t_hall *hall);
+void		aquiring_dongles(t_coders *coder);
 void		free_coder(t_hall *hall, int index);
 void		free_dongle(t_hall *hall, int index);
+void		heap_swap(t_heap *heap, int a, int b);
+void		print_log(t_coders *coder, char *msg);
 void		free_tab_coders_and_dongles(t_hall *hall);
-void		aquiring_dongles(t_coders *coder);
 
 int			run_coders(t_hall *hall);
 int			init_coders(t_hall *hall);
 int			init_dongles(t_hall *hall);
+int			heap_pop(t_heap *heap);
 int			print_err(char *msg1, char *msg2);
 int			parse_intput(int argc, char **argv);
 int			init_dongle_and_coders(t_hall *hall);

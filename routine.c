@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 09:27:19 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/24 11:48:45 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/27 17:23:35 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	*routine(void *arg)
 	{
 		if (coder->current_status == ACQUIRING_DONGLES)
 			aquiring_dongles(coder);
-		// else if (coder->current_status == COMPILING)
-		// 	compiling(coder);
+		else if (coder->current_status == COMPILING)
+			compiling(coder);
 		// else if (coder->current_status == DEBUGGING)
 		// 	debugging(coder);
 		// else if (coder->current_status == REFACTORING)

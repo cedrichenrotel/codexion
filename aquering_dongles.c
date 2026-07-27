@@ -6,12 +6,13 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 11:47:24 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/24 14:36:34 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/27 18:43:34 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 #include <stdio.h>
+#include <unistd.h>
 
 /*compare et range dans 2 pointeur en ordre croissant*/
 static	void	sort_dongles(t_coders *coder, t_dongle **first, t_dongle **second)
@@ -38,7 +39,7 @@ static	void	acquire_one_dongle(t_coders *coder, t_dongle *dongle, long long key)
 
 	pthread_mutex_lock(&dongle->acces_dongle);
 	
-		/*mettre coder comme prioriter*/
+	/*mettre coder comme prioriter*/
 	heap_push(dongle->tab_priority, coder->id_coder, key);
 	while (dongle->tab_priority->tab_id_coder[0].id_coder != coder->id_coder
 		|| !dongle->accessible
@@ -51,8 +52,10 @@ static	void	acquire_one_dongle(t_coders *coder, t_dongle *dongle, long long key)
 										 2. libert temporairement le mutex
 										 3. réveille automatiquement après un court délai pour re-tester la condition*/
 	}
+	heap_pop(dongle->tab_priority);
 	dongle->accessible = 0;
 	pthread_mutex_unlock(&dongle->acces_dongle);
+	printf("id_coder: %d\n", coder->id_coder);
 }
 
 void	aquiring_dongles(t_coders *coder)
