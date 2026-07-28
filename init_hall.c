@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_hall.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/15 17:55:16 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/22 10:29:39 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/28 16:01:07 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,11 @@ static int	init_hall_locks(t_hall *hall)
 		pthread_cond_destroy(&hall->doorbell_pass);
 		return (print_err("init_hall.c", "Failed init secu_log"));
 	}
+	if (pthread_mutex_init(&hall->secu_burnout, NULL) != 0)
+	{
+		pthread_mutex_destroy(&hall->secu_burnout);
+		return (print_err("init_hall.c", "Failed init secu_burnout"));
+	}
 	return (SUCCESS);
 }
 
@@ -69,5 +74,6 @@ int	init_hall(char **argv, t_hall *hall)
 {
 	if (!converted_and_stock_arg(argv, hall) || !init_hall_locks(hall))
 		return (ERROR);
+	hall->burnout = 0;
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 11:47:24 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/27 18:43:34 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/28 11:59:00 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ static	void	acquire_one_dongle(t_coders *coder, t_dongle *dongle, long long key)
 	heap_pop(dongle->tab_priority);
 	dongle->accessible = 0;
 	pthread_mutex_unlock(&dongle->acces_dongle);
-	printf("id_coder: %d\n", coder->id_coder);
 }
 
 void	aquiring_dongles(t_coders *coder)
@@ -74,7 +73,8 @@ void	aquiring_dongles(t_coders *coder)
 		key = get_time_ms();
 	
 	acquire_one_dongle(coder, first, key);
+	print_log(coder, "has taken a dongle");
 	acquire_one_dongle(coder, second, key);
-
-
+	print_log(coder, "has taken a dongle");
+	change_status(coder, COMPILING);
 }

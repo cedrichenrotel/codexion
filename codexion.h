@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/27 18:50:43 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/28 15:56:24 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,17 @@ typedef struct s_hall
 	pthread_mutex_t				secu_log;
 	// protege le compteur partager contre simultaner par plusieurs threads
 	pthread_mutex_t				secu_nb_pass;
+	pthread_mutex_t				secu_burnout;
 	// sert a reveiller un codeur qui attend un badge
 	pthread_cond_t				doorbell_pass;
+	pthread_t					monitor_thread;
 	t_dongle					*dongles;
 	t_coders					*coders;
 	t_scheduler					scheduler;
 	int							nb_pass;
 	int							number_of_coders;
 	int							number_of_compiles_required;
+	int							burnout;
 	long	long				time_to_burnout;
 	long	long				time_to_compile;
 	long	long				time_to_debug;
@@ -100,8 +103,8 @@ typedef struct s_heap
 }			t_heap;
 
 void		*routine(void *arg);
-void		print_struct(t_hall *hall);
 void		compiling(t_coders *coder);
+void		*monitor_burnout(void *arg);
 void		free_mutex_hall(t_hall *hall);
 void		aquiring_dongles(t_coders *coder);
 void		free_coder(t_hall *hall, int index);
@@ -109,6 +112,7 @@ void		free_dongle(t_hall *hall, int index);
 void		heap_swap(t_heap *heap, int a, int b);
 void		print_log(t_coders *coder, char *msg);
 void		free_tab_coders_and_dongles(t_hall *hall);
+void		change_status(t_coders *coder, t_status status);
 
 int			run_coders(t_hall *hall);
 int			init_coders(t_hall *hall);

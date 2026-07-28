@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_coders.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 17:05:49 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/21 13:13:36 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/28 15:26:01 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ int	run_coders(t_hall *hall)
 {
 	if (!start_hall_coders(hall))
 		return (ERROR);
+	pthread_create(&hall->monitor_thread, NULL, monitor_burnout, hall);
 	if (!join_hall_coders(hall))
 		return (ERROR);
+	pthread_join(hall->monitor_thread, NULL);
 	return (SUCCESS);
 }
