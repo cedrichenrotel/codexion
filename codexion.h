@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 15:56:24 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/28 18:55:03 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void		*routine(void *arg);
 void		compiling(t_coders *coder);
 void		*monitor_burnout(void *arg);
 void		free_mutex_hall(t_hall *hall);
-void		aquiring_dongles(t_coders *coder);
 void		free_coder(t_hall *hall, int index);
 void		free_dongle(t_hall *hall, int index);
 void		heap_swap(t_heap *heap, int a, int b);
@@ -114,10 +113,11 @@ void		print_log(t_coders *coder, char *msg);
 void		free_tab_coders_and_dongles(t_hall *hall);
 void		change_status(t_coders *coder, t_status status);
 
+int			heap_pop(t_heap *heap);
 int			run_coders(t_hall *hall);
 int			init_coders(t_hall *hall);
 int			init_dongles(t_hall *hall);
-int			heap_pop(t_heap *heap);
+int			aquiring_dongles(t_coders *coder);
 int			print_err(char *msg1, char *msg2);
 int			parse_intput(int argc, char **argv);
 int			init_dongle_and_coders(t_hall *hall);

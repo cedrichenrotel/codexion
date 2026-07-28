@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 09:27:19 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 15:50:47 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/28 19:07:06 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,14 @@ compilé à temps)*/
 void	*routine(void *arg)
 {
 	t_coders *coder = (t_coders *)arg;
+	int	burnout;
+	int	nb_compil;
+	int nb_compil_req;
 	
-	while (coder->number_of_compiles < coder->hall->number_of_compiles_required)
+	burnout = coder->hall->burnout;
+	nb_compil = coder->number_of_compiles;
+	nb_compil_req = coder->hall->number_of_compiles_required;
+	while (burnout == 0 && nb_compil < nb_compil_req)
 	{
 		if (coder->current_status == ACQUIRING_DONGLES)
 			aquiring_dongles(coder);
@@ -46,8 +52,6 @@ void	*routine(void *arg)
 		else if (coder->current_status == REFACTORING)
 			simulate_phase(coder, "is refactoring", ACQUIRING_DONGLES,
 							coder->hall->time_to_refactor);
-		else if (coder->hall->burnout != 0)
-			break;
 	}
 	return (arg);
 }

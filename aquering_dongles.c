@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 11:47:24 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 11:59:00 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/28 19:15:08 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,33 @@ static	void	sort_dongles(t_coders *coder, t_dongle **first, t_dongle **second)
 	-si id-coder n est pas en test de liste de prioriter
 	-si le premier dongle est accessible
 	-si le temp de repos n est pas respecter*/
-static	void	acquire_one_dongle(t_coders *coder, t_dongle *dongle, long long key)
+
+static	int	dongle_not_ready(t_coders *coder, t_dongle *dongle)
+{
+	int			top_heap;
+	int			accessible;
+	int			id_coder;
+	long long	in_cooldown;
+	long long	cooldown;
+
+	top_heap = dongle->tab_priority->tab_id_coder[0].id_coder;
+	accessible = dongle->accessible;
+	cooldown = coder->hall->dongle_cooldown;
+	in_cooldown = get_time_ms() - dongle->last_release;
+	id_coder = coder->id_coder;
+	return (top_heap != id_coder || !accessible || in_cooldown < cooldown);
+	
+}
+
+static	int	acquire_one_dongle(t_coders *coder, t_dongle *dongle,
+									long long key)
 {
 	struct timespec cooldown_time;
-
+ 
 	pthread_mutex_lock(&dongle->acces_dongle);
-	
 	/*mettre coder comme prioriter*/
 	heap_push(dongle->tab_priority, coder->id_coder, key);
-	while (dongle->tab_priority->tab_id_coder[0].id_coder != coder->id_coder
-		|| !dongle->accessible
-		|| get_time_ms() - dongle->last_release < coder->hall->dongle_cooldown)
+	while (coder->hall->burnout != 1 && dongle_not_ready(coder, dongle))
 	{
 		cooldown_time.tv_sec = (get_time_ms() + 50) / 1000; //donne les secondes entières
 		cooldown_time.tv_nsec = ((get_time_ms() + 50) % 1000) * 1000000; //donne le reste en nanosecondes
@@ -52,12 +68,20 @@ static	void	acquire_one_dongle(t_coders *coder, t_dongle *dongle, long long key)
 										 2. libert temporairement le mutex
 										 3. réveille automatiquement après un court délai pour re-tester la condition*/
 	}
+	pthread_mutex_lock(&coder->hall->secu_burnout);
+	if (coder->hall->burnout)
+	{
+		pthread_mutex_unlock(&dongle->acces_dongle);
+		pthread_mutex_unlock(&coder->hall->secu_burnout);
+		return (ERROR);
+	}
 	heap_pop(dongle->tab_priority);
 	dongle->accessible = 0;
 	pthread_mutex_unlock(&dongle->acces_dongle);
+	return (SUCCESS);
 }
 
-void	aquiring_dongles(t_coders *coder)
+int	aquiring_dongles(t_coders *coder)
 {
 	t_dongle	*first;
 	t_dongle	*second;
@@ -72,9 +96,12 @@ void	aquiring_dongles(t_coders *coder)
 	else
 		key = get_time_ms();
 	
-	acquire_one_dongle(coder, first, key);
+	if (!acquire_one_dongle(coder, first, key))
+		return (ERROR);
 	print_log(coder, "has taken a dongle");
-	acquire_one_dongle(coder, second, key);
+	if (!acquire_one_dongle(coder, second, key))
+		return (ERROR);
 	print_log(coder, "has taken a dongle");
 	change_status(coder, COMPILING);
+	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/15 17:55:16 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 16:01:07 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/28 17:54:55 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	free_mutex_hall(t_hall *hall)
 	pthread_mutex_destroy(&hall->secu_log);
 	pthread_mutex_destroy(&hall->secu_nb_pass);
 	pthread_cond_destroy(&hall->doorbell_pass);
+	pthread_mutex_destroy(&hall->secu_burnout);
 }
 
 int	init_hall(char **argv, t_hall *hall)

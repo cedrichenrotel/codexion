@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:42:48 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/22 07:36:31 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/28 18:28:54 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static	int	init(t_coders *coders, t_hall *hall, int index)
 
 	nb_coders = hall->number_of_coders;
 	coders->id_coder = index;
-	coders->last_compile_start = 0;
+	coders->last_compile_start = get_time_ms();
 	coders->number_of_compiles = 0;
 	coders->current_status = ACQUIRING_DONGLES;
 	coders->hall = hall;
