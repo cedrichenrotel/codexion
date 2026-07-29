@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/21 14:11:20 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/27 15:49:01 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/29 19:39:13 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	init_heap(t_hall *hall, t_heap *heap)
 	if (!heap->tab_id_coder)
 		return (print_err("heap.c", "Allocation failed"));
 	heap->capacity_max = hall->number_of_coders;
-	heap->size_actually = 0;
+	heap->nb_actually = 0;
 	return (SUCCESS);
 }
 
@@ -29,7 +29,7 @@ static	void	heapify_up(t_heap *heap)
 	int	i;
 	int	parent;
 
-	i = heap->size_actually -1;
+	i = heap->nb_actually -1;
 	parent = (i - 1) / 2;
 	while (heap->tab_id_coder[i].key < heap->tab_id_coder[parent].key
 		&& i > 0)
@@ -45,11 +45,11 @@ trop petit pour être là → on le compare à son parent et on remonte
 (heapify_up)*/
 int	heap_push(t_heap *heap, int id_coder, long long key)
 {
-	if (heap->size_actually < heap->capacity_max)
+	if (heap->nb_actually < heap->capacity_max)
 	{
-		heap->tab_id_coder[heap->size_actually].key = key;
-		heap->tab_id_coder[heap->size_actually].id_coder = id_coder;
-		heap->size_actually++;
+		heap->tab_id_coder[heap->nb_actually].key = key;
+		heap->tab_id_coder[heap->nb_actually].id_coder = id_coder;
+		heap->nb_actually++;
 		heapify_up(heap);
 		return (SUCCESS);
 	}
@@ -66,9 +66,9 @@ static	int	heapify_down(t_heap *heap, int *i)
 
 	kid_l = (2 * *(i)) + 1;
 	kid_r = (2 * *(i)) + 2;
-	if (kid_l >= heap->size_actually)
+	if (kid_l >= heap->nb_actually)
 		return (ERROR);
-	else if (kid_r >= heap->size_actually)
+	else if (kid_r >= heap->nb_actually)
 		smallest = kid_l;
 	else
 	{
@@ -94,15 +94,15 @@ int	heap_pop(t_heap *heap)
 	int			last_elem;
 	int			i;
 
-	if (!heap->size_actually)
+	if (!heap->nb_actually)
 		return (print_err("heap.c", "No elements in tab_id_coder"));
-	last_elem = heap->size_actually -1;
+	last_elem = heap->nb_actually -1;
 	heap->tab_id_coder[0].key = heap->tab_id_coder[last_elem].key;
 	heap->tab_id_coder[0].id_coder = heap->tab_id_coder[last_elem].id_coder;
-	heap->size_actually --;
+	heap->nb_actually --;
 
 	i = 0;
-	while (i < heap->size_actually)
+	while (i < heap->nb_actually)
 	{
 		if (!heapify_down(heap, &i))
 			break ;

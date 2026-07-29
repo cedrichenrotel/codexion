@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 09:27:19 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 19:07:06 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/29 09:31:54 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,18 @@
 #include <unistd.h>
 
 void	simulate_phase(t_coders *coder, char *msg, t_status status
-						, long long time)
-{
+	, long long time)
+	{
 	print_log(coder, msg);
 	usleep(time * 1000);
 	change_status(coder, status);
 }
-
+/*condition destinee pour la boucle de s'arreter*/
+static	int	execution_condition(t_coders *coder)
+{
+	return (coder->hall->burnout == 0 && coder->number_of_compiles <
+			coder->hall->number_of_compiles_required);
+}
 /*Fonction exécutée par chaque thread coder — c'est son
 cycle de vie complet. Elle doit faire tourner le coder en boucle à travers
 les états ACQUIRING_DONGLES → COMPILING → ..., en gérant l'acquisition sans
@@ -33,14 +38,7 @@ compilé à temps)*/
 void	*routine(void *arg)
 {
 	t_coders *coder = (t_coders *)arg;
-	int	burnout;
-	int	nb_compil;
-	int nb_compil_req;
-	
-	burnout = coder->hall->burnout;
-	nb_compil = coder->number_of_compiles;
-	nb_compil_req = coder->hall->number_of_compiles_required;
-	while (burnout == 0 && nb_compil < nb_compil_req)
+	while (execution_condition(coder))
 	{
 		if (coder->current_status == ACQUIRING_DONGLES)
 			aquiring_dongles(coder);

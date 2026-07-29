@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 11:47:24 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 19:15:08 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/29 18:53:14 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,27 +57,25 @@ static	int	acquire_one_dongle(t_coders *coder, t_dongle *dongle,
 	struct timespec cooldown_time;
  
 	pthread_mutex_lock(&dongle->acces_dongle);
-	/*mettre coder comme prioriter*/
 	heap_push(dongle->tab_priority, coder->id_coder, key);
 	while (coder->hall->burnout != 1 && dongle_not_ready(coder, dongle))
 	{
 		cooldown_time.tv_sec = (get_time_ms() + 50) / 1000; //donne les secondes entières
 		cooldown_time.tv_nsec = ((get_time_ms() + 50) % 1000) * 1000000; //donne le reste en nanosecondes
 		pthread_cond_timedwait(&dongle->doorbell, &dongle->acces_dongle
-			, &cooldown_time); /*permet: 1. mettre le coder en pause
-										 2. libert temporairement le mutex
-										 3. réveille automatiquement après un court délai pour re-tester la condition*/
+			, &cooldown_time);
 	}
 	pthread_mutex_lock(&coder->hall->secu_burnout);
 	if (coder->hall->burnout)
 	{
-		pthread_mutex_unlock(&dongle->acces_dongle);
 		pthread_mutex_unlock(&coder->hall->secu_burnout);
+		pthread_mutex_unlock(&dongle->acces_dongle);
 		return (ERROR);
 	}
 	heap_pop(dongle->tab_priority);
 	dongle->accessible = 0;
 	pthread_mutex_unlock(&dongle->acces_dongle);
+	pthread_mutex_unlock(&coder->hall->secu_burnout);
 	return (SUCCESS);
 }
 

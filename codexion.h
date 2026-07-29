@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 18:55:03 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/29 19:37:58 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ typedef struct s_heap
 {
 	t_element	*tab_id_coder;
 	int			capacity_max;
-	int			size_actually;
+	int			nb_actually;
 
 }			t_heap;
 
