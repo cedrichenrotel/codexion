@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 12:20:26 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/24 15:36:48 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/30 17:59:05 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	free_dongle(t_hall *hall, int index)
 
 static	int	init(t_dongle *dongle, t_hall *hall, int i)
 {
-	dongle->index = i;
+	dongle->index = i + 1;
 	dongle->accessible = 1;
 	dongle->last_release = 0;
 	dongle->tab_priority = malloc(sizeof(t_heap));

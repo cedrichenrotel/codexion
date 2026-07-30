@@ -43,8 +43,25 @@ classique des philosophes.
  limitée, que chaque coder doit s'approprier temporairement pour pouvoir 
  s'exécuter.
 
- ## Implémentation technique — les fonctions pthread
-- **pthread_mutex_init**: initialise le mutex associé à un dongle, avant que
+## Resultat d'execution
+À chaque événement, le programme affiche une ligne contenant :
+
+- **Le temps écoulé** (en millisecondes) depuis le lancement du programme 
+jusqu'à l'instant de cet affichage.
+C'est un temps relatif, pas une heure absolue, pour permettre de comparer 
+facilement la progression de chaque coder.
+- **L'identifiant** du coder concerné par cet événement 
+(son numéro, par exemple 0, 1, 2...).
+- **L'état du coder** au moment de l'affichage, parmi les valeurs suivantes :
+	- `is compiling` -> Le coder vient d'obtenir ses 2 dongles et commence à
+	 compiler.
+	- `is debugging` -> Le coder passe en phase de debug.
+	- `is refactoring` -> le coder passe en phase de refactoring.
+	- `burned out` -> le coder a dépassé son délai autorisé sans recompiler à 
+	 temps.
+
+## Implémentation technique — les fonctions pthread
+ **pthread_mutex_init**: initialise le mutex associé à un dongle, avant que
 n'importe quel thread ne puisse l'utiliser.
 C'est l'étape de mise en place de la "serrure".
 - **pthread_mutex_lock**: permet à un coder de verrouiller un dongle avant de 
@@ -114,25 +131,26 @@ puisque le programme ne plante pas, mais il reste figé pour toujours.
 ![Schéma des coders et dongles 1.1](image_readme/schema_etape_1.1.svg)
  
 ### Étape 2 — Solution
-Pour éviter ce phénomène, chaque coder trie en ordre croissant parmi les deux
-dongles qu'ils possèdent et essaient de recuperer le plus petit.
+Pour éviter ce phénomène, chaque coder paire commencera a essayer de prendre
+le dongle de doite
 
 #### Exemple :
 ```bash
-coder[0] -> dongle[0] < dongle[3]
-coder[0] prend dongle[0]
+Tour 0:
+coder[1] -> impaire
+coder[1] attend
  
-coder[1] -> dongle[0] < dongle[1]
-coder[1] prend dongle[0]
+coder[2] -> paire
+coder[2] prend dongle de droite
  
-coder[2] -> dongle[1] < dongle[2]
-coder[2] prend dongle[1]
- 
-coder[3] -> dongle[2] < dongle[3]
-coder[3] prend dongle[2]
+coder[3] -> impaire
+coder[3] attend
+
+coder[4] -> paire
+coder[4] prend dongle de droite
 ```
  
-![Schéma des coders et dongles 1.2](image_readme/schema_etape_1.2.svg)
+![Schéma des coders et dongles 1.2](image_readme/solution_paire_impaire.svg)
 
 Conséquence : deux coders voisins (par exemple coder[0] et coder[1]) vont 
 viser le même dongle en premier et donc se le disputer.

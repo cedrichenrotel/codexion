@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:42:48 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 18:28:54 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/30 17:59:42 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static	int	init(t_coders *coders, t_hall *hall, int index)
 	int	index_left_dongle;
 
 	nb_coders = hall->number_of_coders;
-	coders->id_coder = index;
+	coders->id_coder = index + 1;
 	coders->last_compile_start = get_time_ms();
 	coders->number_of_compiles = 0;
 	coders->current_status = ACQUIRING_DONGLES;

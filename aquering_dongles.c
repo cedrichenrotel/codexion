@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aquering_dongles.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 11:47:24 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/30 13:04:54 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/30 17:46:57 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 /*compare et range dans 2 pointeur en ordre croissant*/
 static	void	sort_dongles(t_coders *coder, t_dongle **first, t_dongle **second)
 {
-	if (coder->left_dongle->index < coder->right_dongle->index)
+	if (coder->id_coder % 2)
 	{
-		*first = coder->left_dongle;
-		*second = coder->right_dongle;
+		*first = coder->right_dongle;
+		*second = coder->left_dongle;
 	}
 	else
 	{	
-		*first = coder->right_dongle;
-		*second = coder->left_dongle;
+		*first = coder->left_dongle;
+		*second = coder->right_dongle;
 	}
 }
 

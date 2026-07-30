@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor_burnout.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 13:12:30 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/30 14:07:04 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/30 16:35:18 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ void	*monitor_burnout(void *arg)
 			time_elapsed = get_time_ms() - hall->coders[i].last_compile_start;
 			if (time_elapsed >= hall->time_to_burnout)
 			{
-				if (i < hall->number_of_coders && hall->coders[i].number_of_compiles 
-					< hall->number_of_compiles_required)
-					i++;
 				pthread_mutex_unlock(&hall->coders[i].acces_coder);
 				change_status(&hall->coders[i], BURNOUT);
 				print_log(&hall->coders[i], "burned out");
