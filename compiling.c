@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   compiling.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 17:23:04 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 10:43:49 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/30 13:20:46 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ void	compiling(t_coders *coder)
 	pthread_mutex_unlock(&coder->acces_coder);
 
 	usleep(coder->hall->time_to_compile * 1000);
-	release_dongles(coder->left_dongle);
 	release_dongles(coder->right_dongle);
+	release_dongles(coder->left_dongle);
 
 	pthread_mutex_lock(&coder->acces_coder);
 	coder->number_of_compiles += 1;

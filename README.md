@@ -13,6 +13,8 @@ Le programme prend en argument, via le terminal :
 - le temps de repos pour les dongles
 - le planificateur
 
+![arg input](image_readme/arg_input.png)
+
 L'objectif est de simuler simultanément plusieurs unités de traitement 
 (les coders) a:
 - Acquerir 2 dongle necessaire pour l'execution
@@ -69,7 +71,7 @@ se disputer le même dongle libéré.
 - **pthread_cond_timedwait**: met un coder en attente d'un dongle, tout en
 libérant temporairement le mutex pour ne pas bloquer les autres threads.
 Le coder se réveille soit parce qu'un autre coder a signalé la libération du
-dongle, soit parce que sa deadline est atteinte (timeout) — ce qui évite qu'il
+dongle, soit parce que sa deadline est atteinte (timeout) — ce qui évite qu'ilpthread_cond_broadcast
 n'attende indéfiniment et permet de déclencher le burnout si nécessaire.
 - **pthread_cond_destroy**: détruit proprement la variable de condition à la fin
  du programme, une fois qu'elle n'est plus utilisée.
@@ -179,5 +181,58 @@ les conditions
 Il pourra alors revérifier si les conditions ci-dessus sont valides.
 
 Sinon (si les conditions sont valides), le dongle est attribué au coder en tête
- de liste, le tableau de priorité est mis à jour (retrait de la liste d'attente, actualisation de `last_release`, etc.), puis le dongle est déverrouillé avec 
- la fonction `pthread_mutex_unlock()`.
+de liste, le tableau de priorité est mis à jour (retrait de la liste d'attente, actualisation de `last_release`, etc.), puis le dongle est déverrouillé avec 
+la fonction `pthread_mutex_unlock()`
+![etape de validation d'acquisition dongle](image_readme/schema_etape_1.5.svg)
+bloquer l'accessibiliter du dongle.
+Cette etape sera effectuer 2 fois.
+Puis faire passer l'etat de acquiring_dongle a compiling
+![acquisition dongle des 2 dongles](image_readme/schema_etape_1.6.svg)
+
+## Compiling
+
+Le compiling consiste à :
+
+- Afficher le message "is compiling" et l'instant
+- Enregistrer l'instant de début de compilation (utilisé pour le burnout et l'EDF)
+- Simuler la durée de la compilation via usleep()
+- Pour chaque dongle (gauche puis droite) : débloquer son accessibilité, enregistrer l'instant de relâchement, puis réveiller les coders en attente sur ce dongle via pthread_cond_broadcast()
+- Incrémenter le nombre de compilations effectuées par le coder
+- Faire passer l'état de compiling à debugging
+
+tout en protégeant chaque étape qui touche une donnée partagée par le mutex correspondant (coder ou dongle).
+![schema de compilation](image_readme/schema_etape_compile.svg)
+
+## Debugging et refactoring
+
+Debugging et refactoring font exactement la meme chose:
+- Afficher le message "is debugging" ou "is refactoring", l'instant, l'identifiant du coder
+- Simuler la durée simulée est time_to_debug / time_to_refactor usleep()
+- changement de status
+tous securisant pthread_mutex_unlock/pthread_mutex_unlock
+![schema debbug/refacto](image_readme/schema_debug_refacto.svg)
+
+## Burnout
+
+Le burnout est surveillé par un thread dédié (monitor_thread), lancé en parallèle des threads coders, dont le rôle est de vérifier en continu qu'aucun coder ne reste trop longtemps sans avoir recompilé.
+Condition d'arrêt
+
+Le thread tourne tant que le nombre total de compilations effectuées par tous les coders n'a pas atteint la cible (nombre_de_coders * nombre_de_compiles_required). Ce total est recalculé à chaque tour de boucle en sommant le number_of_compiles de chaque coder — la surveillance s'arrête donc naturellement une fois que tout le monde a atteint son quota, sans qu'aucun burnout ne se soit produit.
+Détection
+
+À chaque tour, pour chaque coder, le thread calcule le temps écoulé depuis le début de sa dernière compilation (maintenant - last_compile_start). Si ce temps dépasse le délai autorisé (time_to_burnout), cela signifie que le coder est resté trop longtemps sans recompiler (par exemple bloqué en attente de ses dongles) : il "burnout".
+
+Conséquences du burnout
+
+Dès qu'un burnout est détecté :
+- le statut du coder passe à BURNOUT
+- un message est loggé ("burned out")
+- le flag global hall->burnout passe à 1
+- le thread de surveillance s'arrête immédiatement
+
+Ce flag est ensuite lu par tous les autres threads en attente : chaque coder arrête sa boucle principale, et tout coder en attente d'un dongle arrête d'attendre. Un seul burnout suffit donc à stopper proprement toute la simulation, sans laisser de thread tourner indéfiniment.
+
+Fréquence et protection
+
+La vérification se fait toutes les 5ms (usleep(5000)). Chaque lecture des données d'un coder est protégée par son propre mutex, et l'écriture du flag global de burnout est protégée par un mutex dédié — deux verrous distincts pour deux données distinctes.
+![schema burnout](image_readme/schema_burnout_monitor.svg)

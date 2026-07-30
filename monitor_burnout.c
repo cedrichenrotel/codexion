@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor_burnout.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 13:12:30 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 16:03:31 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/30 08:41:22 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ void	*monitor_burnout(void *arg)
 	/*nombre de coder * nombre de compilation*/
 	cible = hall->number_of_coders * hall->number_of_compiles_required;
 	current_total = 0;
-	
 	while (current_total < cible)
 	{
+		current_total = 0;
 		if (current_total == cible)
 			break;
 		i = 0;

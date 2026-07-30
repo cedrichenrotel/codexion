@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/29 19:37:58 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/30 13:40:22 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct s_hall
 	long	long				time_to_debug;
 	long	long				time_to_refactor;
 	long	long				dongle_cooldown;
+	long	long				start_time;
 
 }					t_hall;
 
@@ -127,5 +128,6 @@ int			print_error_parse(char *msg, char *arg);
 int			heap_push(t_heap *heap, int id_coder, long long key);
 
 long long		get_time_ms(void);
+long long		timer(t_coders *coder);
 
 #endif

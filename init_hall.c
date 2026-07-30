@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_hall.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/15 17:55:16 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/28 17:54:55 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/30 13:12:23 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,6 @@ int	init_hall(char **argv, t_hall *hall)
 	if (!converted_and_stock_arg(argv, hall) || !init_hall_locks(hall))
 		return (ERROR);
 	hall->burnout = 0;
+	hall->start_time = get_time_ms();
 	return (SUCCESS);
 }
