@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 13:12:30 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/30 08:41:22 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/30 14:07:04 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ void	*monitor_burnout(void *arg)
 			time_elapsed = get_time_ms() - hall->coders[i].last_compile_start;
 			if (time_elapsed >= hall->time_to_burnout)
 			{
+				if (i < hall->number_of_coders && hall->coders[i].number_of_compiles 
+					< hall->number_of_compiles_required)
+					i++;
 				pthread_mutex_unlock(&hall->coders[i].acces_coder);
 				change_status(&hall->coders[i], BURNOUT);
 				print_log(&hall->coders[i], "burned out");
@@ -45,7 +48,6 @@ void	*monitor_burnout(void *arg)
 				pthread_mutex_unlock(&hall->secu_burnout);
 				return (NULL);
 			}
-				
 			/*somme de chaque nombre de compilation max que chaque coder
 			peux faire*/
 			current_total += hall->coders[i].number_of_compiles;
