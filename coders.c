@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:42:48 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/30 17:59:42 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/31 13:37:54 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ static	int	init(t_coders *coders, t_hall *hall, int index)
 	coders->left_dongle = &hall->dongles[index_left_dongle];
 	return (SUCCESS);
 }
-/*allocation et initialisation d'un tableau t_coders[] */
+
+/*Allocation and initialisation of an array t_coders[]*/
 int	init_coders(t_hall *hall)
 {
 	int	nb_coders;

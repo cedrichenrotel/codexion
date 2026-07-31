@@ -6,14 +6,14 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/21 14:11:20 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/29 19:39:13 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/31 14:45:31 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 #include <stdlib.h>
 
-/*allocation de memoire a ma liste de prioriter*/
+/*memory allocation for my priority list*/
 int	init_heap(t_hall *hall, t_heap *heap)
 {
 	heap->tab_id_coder = malloc(sizeof(t_element) * hall->number_of_coders);
@@ -40,8 +40,8 @@ static	void	heapify_up(t_heap *heap)
 	}
 }
 
-/*le nouvel élément arrive en bas (dernière position), potentiellement
-trop petit pour être là → on le compare à son parent et on remonte
+/*the new element arrives at the bottom (last position), and may
+be too small to be there → we compare it with its parent and move it up
 (heapify_up)*/
 int	heap_push(t_heap *heap, int id_coder, long long key)
 {
@@ -55,14 +55,15 @@ int	heap_push(t_heap *heap, int id_coder, long long key)
 	}
 	return (print_err("heap.c", "Current size > capacity_max"));
 }
-/*l'élément déplacé vient du bas du tas mais atterrit en haut (racine) → il est
-potentiellement trop grand pour être là → il faut le comparer à ses enfants et
-le faire descendre (heapify_down)*/
+
+/*the element being moved comes from the bottom of the heap but ends up at the
+top (root) → it is potentially too large to be there → it must be compared with 
+its children and moved down (heapify_down)*/
 static	int	heapify_down(t_heap *heap, int *i)
 {
 	int	kid_r;
 	int	kid_l;
-	int smallest;
+	int	smallest;
 
 	kid_l = (2 * *(i)) + 1;
 	kid_r = (2 * *(i)) + 2;
@@ -86,9 +87,10 @@ static	int	heapify_down(t_heap *heap, int *i)
 	}
 	return (SUCCESS);
 }
-/*premiere patrie du code permet de stocker et returner l'element de l'index 0, 
-puis remonter le dernier element en tete de liste pour recaluler l'arbre
-binaire */
+
+/*The first part of the code stores and returns the element at index 0,
+then moves the last element to the front of the list to recalculate the
+binary tree */
 int	heap_pop(t_heap *heap)
 {
 	int			last_elem;
@@ -100,7 +102,6 @@ int	heap_pop(t_heap *heap)
 	heap->tab_id_coder[0].key = heap->tab_id_coder[last_elem].key;
 	heap->tab_id_coder[0].id_coder = heap->tab_id_coder[last_elem].id_coder;
 	heap->nb_actually --;
-
 	i = 0;
 	while (i < heap->nb_actually)
 	{
@@ -109,4 +110,3 @@ int	heap_pop(t_heap *heap)
 	}
 	return (SUCCESS);
 }
-

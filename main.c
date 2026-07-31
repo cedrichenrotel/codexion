@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 17:07:12 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/29 09:42:20 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/31 13:33:09 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,22 @@ int	main(int argc, char **argv)
 	if (init_hall(argv, &hall))
 	{
 		if (!init_dongle_and_coders(&hall))
+		{
+			free_mutex_hall(&hall);
 			return (ERROR);
+		}
 		if (!run_coders(&hall))
 		{
-			free_tab_coders_and_dongles(&hall);
+			free_dongle(&hall, hall.number_of_coders);
+			free_coder(&hall, hall.number_of_coders);
+			free_mutex_hall(&hall);
 			return (ERROR);
 		}
 	}
 	else
 		return (ERROR);
-	free_tab_coders_and_dongles(&hall);
+	free_dongle(&hall, hall.number_of_coders);
+	free_coder(&hall, hall.number_of_coders);
+	free_mutex_hall(&hall);
 	return (SUCCESS);
 }

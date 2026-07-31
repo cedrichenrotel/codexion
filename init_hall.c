@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_hall.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/15 17:55:16 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/30 13:12:23 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/31 12:21:16 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ static	int	converted_and_stock_arg(char **argv, t_hall *hall)
 	}
 }
 
-/*initialisation de tous les mutex de hall*/
 static int	init_hall_locks(t_hall *hall)
 {
 	if (pthread_mutex_init(&hall->secu_nb_pass, NULL) != 0)

@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 12:20:26 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/30 17:59:05 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/31 13:37:05 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,12 @@ static	int	init(t_dongle *dongle, t_hall *hall, int i)
 	if (pthread_mutex_init(&dongle->acces_dongle, NULL) != 0
 		|| pthread_cond_init(&dongle->doorbell, NULL) != 0)
 		return (print_err("dongles.c", "Failed init dongle"));
-	if(!init_heap(hall, dongle->tab_priority))
+	if (!init_heap(hall, dongle->tab_priority))
 		return (print_err("dongles.c", "Failed tab_priority"));
 	return (SUCCESS);
 }
-/*allocation et initialisation d'un tableau t_dongles[] */
+
+/*allocation and initialisation of an array t_dongles[] */
 int	init_dongles(t_hall *hall)
 {
 	int	nb_dongle;

@@ -6,7 +6,7 @@
 /*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 14:35:13 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/29 09:43:09 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/31 12:19:34 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ static	int	validation_numbers(char *numbers)
 	int	len_numbers;
 
 	len_numbers = strlen(numbers);
+	if (numbers[0] == '0' && len_numbers > 1)
+		return (print_error_parse("Invalide number"
+				"A leading '0' is not permitted\n", numbers));
 	if (len_numbers > 10)
 		return (print_error_parse("The numeric value is too long to be "
 				"converted to an integer", numbers));
@@ -41,7 +44,7 @@ static	int	validation_numbers(char *numbers)
 	return (SUCCESS);
 }
 
-int	parse_arg(char *arg, int index, int argc)
+static	int	parse_arg(char *arg, int index, int argc)
 {
 	int	i;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/30 13:40:22 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/07/31 14:40:49 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-#define	SUCCESS	1
-#define	ERROR	0
+# define SUCCESS	1
+# define ERROR	0
 
 typedef enum e_scheduler
 {
@@ -34,8 +34,8 @@ typedef enum e_status
 	BURNOUT,
 }					t_status;
 
-typedef struct s_hall t_hall;
-typedef struct s_heap t_heap;
+typedef struct s_hall	t_hall;
+typedef struct s_heap	t_heap;
 
 typedef struct s_dongle
 {
@@ -47,7 +47,6 @@ typedef struct s_dongle
 	t_heap				*tab_priority;
 
 }					t_dongle;
-
 
 typedef struct s_coders
 {
@@ -79,12 +78,12 @@ typedef struct s_hall
 	int							number_of_coders;
 	int							number_of_compiles_required;
 	int							burnout;
-	long	long				time_to_burnout;
-	long	long				time_to_compile;
-	long	long				time_to_debug;
-	long	long				time_to_refactor;
-	long	long				dongle_cooldown;
-	long	long				start_time;
+	long long					time_to_burnout;
+	long long					time_to_compile;
+	long long					time_to_debug;
+	long long					time_to_refactor;
+	long long					dongle_cooldown;
+	long long					start_time;
 
 }					t_hall;
 
@@ -111,7 +110,6 @@ void		free_coder(t_hall *hall, int index);
 void		free_dongle(t_hall *hall, int index);
 void		heap_swap(t_heap *heap, int a, int b);
 void		print_log(t_coders *coder, char *msg);
-void		free_tab_coders_and_dongles(t_hall *hall);
 void		change_status(t_coders *coder, t_status status);
 
 int			heap_pop(t_heap *heap);
@@ -127,7 +125,7 @@ int			init_heap(t_hall *hall, t_heap *heap);
 int			print_error_parse(char *msg, char *arg);
 int			heap_push(t_heap *heap, int id_coder, long long key);
 
-long long		get_time_ms(void);
-long long		timer(t_coders *coder);
+long long	get_time_ms(void);
+long long	timer(t_coders *coder);
 
 #endif
