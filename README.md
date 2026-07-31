@@ -1,256 +1,262 @@
+*This project has been created as part of the 42 curriculum by cehenrot.*
 
- ## Description
- 
-Codexion est un projet qui a pour but de faire comprendre le fonctionnement du multi-threading.
- 
-Le programme prend en argument, via le terminal :
-- le nombre de coders
-- le délai avant burnout
-- le temps de compilation
-- le temps de debug
-- le temps de refacto
-- le nombre de compilations requises
-- le temps de repos pour les dongles
-- le planificateur
+# Codexion
+
+## Description
+
+Codexion is a project designed to build an understanding of how multi-threading works.
+
+The program takes the following arguments via the terminal:
+- the number of coders
+- the delay before burnout
+- the compilation time
+- the debug time
+- the refactor time
+- the number of compiles required
+- the dongle cooldown time
+- the scheduler
 
 ![arg input](image_readme/arg_input.png)
 
-L'objectif est de simuler simultanément plusieurs unités de traitement 
-(les coders) a:
-- Acquerir 2 dongle necessaire pour l'execution
-- Compiler
-- Debbuger
-- Refactoriser
+The goal is to simulate several processing units (the coders) running concurrently, each of which must:
+- Acquire the 2 dongles needed to run
+- Compile
+- Debug
+- Refactor
 
- sans provoquer ni crash, ni erreur d'affichage. Mais pour s'exécuter, 
- chaque thread a besoin de s'emparer de 2 dongles.
- 
-**Thread** : un fil d'exécution — une unité de traitement qui s'exécute 
-en parallèle (ou en concurrence) avec d'autres, à l'intérieur d'un même 
-programme.
-Plusieurs threads partagent la même mémoire (variables globales, structures), 
-contrairement à des processus séparés. C'est ce qui permet à chaque coder 
-d'agir de manière indépendante, comme un "philosophe" dans le problème 
-classique des philosophes.
- 
-**Dongle** : à l'origine, un petit périphérique physique qu'on branche sur un
- port (USB en général) — une clé de licence logicielle, un adaptateur, ou 
- une clé de sécurité.
- Le point commun de tous ces objets : ce sont des ressources physiques uniques, 
- donc un seul programme ou utilisateur peut s'en servir à la fois, 
- sans possibilité de partage simultané.
- Dans ce projet, le dongle représente cette même idée de ressource exclusive et 
- limitée, que chaque coder doit s'approprier temporairement pour pouvoir 
- s'exécuter.
+without causing any crash or display error. To run, however, each thread needs to acquire 2 dongles.
 
-## Resultat d'execution
-À chaque événement, le programme affiche une ligne contenant :
+**Thread**: a thread of execution — a unit of processing that runs in parallel (or concurrently) with others, inside the same program.
+Multiple threads share the same memory (global variables, structures), unlike separate processes. This is what lets each coder act independently, like a "philosopher" in the classic dining philosophers problem.
 
-- **Le temps écoulé** (en millisecondes) depuis le lancement du programme 
-jusqu'à l'instant de cet affichage.
-C'est un temps relatif, pas une heure absolue, pour permettre de comparer 
-facilement la progression de chaque coder.
-- **L'identifiant** du coder concerné par cet événement 
-(son numéro, par exemple 0, 1, 2...).
-- **L'état du coder** au moment de l'affichage, parmi les valeurs suivantes :
-	- `is compiling` -> Le coder vient d'obtenir ses 2 dongles et commence à
-	 compiler.
-	- `is debugging` -> Le coder passe en phase de debug.
-	- `is refactoring` -> le coder passe en phase de refactoring.
-	- `burned out` -> le coder a dépassé son délai autorisé sans recompiler à 
-	 temps.
+**Dongle**: originally, a small physical device plugged into a port (usually USB) — a software license key, an adapter, or a security key.
+What all these objects have in common: they are unique physical resources, so only one program or user can use them at a time, with no possibility of simultaneous sharing.
+In this project, the dongle represents that same idea of an exclusive, limited resource that each coder must temporarily claim in order to run.
 
-## Implémentation technique — les fonctions pthread
- **pthread_mutex_init**: initialise le mutex associé à un dongle, avant que
-n'importe quel thread ne puisse l'utiliser.
-C'est l'étape de mise en place de la "serrure".
-- **pthread_mutex_lock**: permet à un coder de verrouiller un dongle avant de 
-l'utiliser. 
-Si le dongle est déjà pris, le thread se met en attente jusqu'à ce qu'il 
-se libère.
-C'est ce qui garantit qu'un seul coder à la fois accède à une ressource 
-partagée.
-- **pthread_mutex_unlock**: libère le dongle une fois que le coder a terminé de
- l'utiliser, permettant à un autre coder en attente de le récupérer à son tour.
-- **pthread_mutex_destroy**: détruit proprement le mutex à la fin du programme, 
-une fois qu'il n'est plus utilisé, pour libérer les ressources associées.
-- **pthread_create**: crée un nouveau thread — c'est ce qui fait naître chaque 
-coder comme une unité d'exécution indépendante.
-- **pthread_join**: attend qu'un thread se termine avant de continuer. 
-C'est utile pour s'assurer que tous les coders ont fini leur exécution avant
- que le programme principal ne se termine.
-- **pthread_cond_init**: initialise la variable de condition (doorbell) associée
- à un dongle, utilisée pour réveiller un coder en attente dès qu'un dongle 
- se libère.
-- **pthread_cond_broadcast**: réveille tous les coders en attente sur un même 
-dongle, plutôt qu'un seul, utile si plusieurs coders peuvent potentiellement 
-se disputer le même dongle libéré.
-- **pthread_cond_timedwait**: met un coder en attente d'un dongle, tout en
-libérant temporairement le mutex pour ne pas bloquer les autres threads.
-Le coder se réveille soit parce qu'un autre coder a signalé la libération du
-dongle, soit parce que sa deadline est atteinte (timeout) — ce qui évite qu'ilpthread_cond_broadcast
-n'attende indéfiniment et permet de déclencher le burnout si nécessaire.
-- **pthread_cond_destroy**: détruit proprement la variable de condition à la fin
- du programme, une fois qu'elle n'est plus utilisée.
+## Instructions
 
-Ensemble, ces fonctions garantissent qu'aucun coder ne peut accéder à un dongle
- déjà utilisé par un autre, ce qui empêche les erreurs de concurrence 
- (accès simultané non contrôlé à une même donnée), tout en permettant l'attente
-  et la file d'attente décrites dans les étapes précédentes.
-
- 
-## Fonctionnement par étape
-## PLanificateur
-Un planifiacateur est un composant qui determine a chaque instant qu'elle
-codeur aura le droit de prendre les dongles pour s'executer.
-2 type de strategy peux etre choisi via FIFO ou EDF.
-
-- FIFO(First In, First Out): est la strategy le plus simple "premier 
-		arriver, premier servi".Cela signifie que le premier coder qui
-		obtiendra ses dongle pourra s'executer
-- EDF(Earliest Deadline First): permet de selectionner en priorité le codeur
-		dont le temps restant est le  plus proche de leur deadline.
-## Aquering_dongles
-### Étape 1 — Le problème
- 
-Imaginons que nous avons 4 coders (threads), chacun placé entre 2 dongles :
- 
-![Schéma des coders et dongles](image_readme/schema_etape_1.svg)
- 
-Pour qu'un coder puisse s'exécuter, il doit s'emparer de ses deux dongles :
-celui de gauche et celui de droite.
-Le problème apparaît si tous les coders essaient de prendre leur premier dongle
- exactement au même moment : chacun réussit à en bloquer un, mais aucun ne 
- parvient à obtenir le second, car celui-ci est déjà détenu par son voisin.
- 
-Résultat : tous les coders restent bloqués indéfiniment, chacun en attente 
-d'un dongle qui ne se libérera jamais.
-C'est un **interblocage** (deadlock) — pas un crash à proprement parler, 
-puisque le programme ne plante pas, mais il reste figé pour toujours.
- 
-![Schéma des coders et dongles 1.1](image_readme/schema_etape_1.1.svg)
- 
-### Étape 2 — Solution
-Pour éviter ce phénomène, chaque coder paire commencera a essayer de prendre
-le dongle de doite
-
-#### Exemple :
+### Compilation
 ```bash
-Tour 0:
-coder[1] -> impaire
-coder[1] attend
- 
-coder[2] -> paire
-coder[2] prend dongle de droite
- 
-coder[3] -> impaire
-coder[3] attend
-
-coder[4] -> paire
-coder[4] prend dongle de droite
+make
 ```
- 
-![Schéma des coders et dongles 1.2](image_readme/solution_paire_impaire.svg)
+Builds the `codexion` executable with the flags `-Wall -Wextra -Werror -pthread`.
 
-Conséquence : deux coders voisins (par exemple coder[0] et coder[1]) vont 
-viser le même dongle en premier et donc se le disputer.
-Un seul des deux l'obtiendra, l'autre patientera le temps qu'il se libère 
-— mais sans jamais créer de cycle d'attente circulaire, puisque tous les
-coders convergent dans le même ordre vers les index les plus bas.
-![Schéma des coders et dongles 1.3](image_readme/schema_etape_1.3.svg)
-### Étape 3 _ Resolution de la concurrence
-Chaque dongle possède un tableau de priorité, qui associe à chaque coder 
-l'entourant son identifiant et une clé.
-Cette clé représente une valeur différente selon la strategie choisie :
+Other available rules:
+- `make clean`: removes the object files (`.o`)
+- `make fclean`: also removes the executable
+- `make re`: rebuilds the whole project from scratch
 
-FIFO : la clé représente l'instant d'arrivée du coder.
-EDF : la clé représente l'instant de sa deadline.
+### Execution
+```bash
+./codexion number_of_coders time_to_burnout time_to_compile time_to_debug time_to_refactor number_of_compiles_required dongle_cooldown scheduler
+```
 
-Lorsque deux coders se disputent le même dongle, celui dont la clé a la plus
-petite valeur devient prioritaire et récupère le dongle. 
-Ce mécanisme permet ainsi de sélectionner automatiquement le coder à servir
- en premier.
-![Schéma des coders et dongles 1.4](image_readme/schema_etape_1.4.svg)
-### Étape 4 — Acquisition d'un dongle en détail
+| Argument | Description |
+|---|---|
+| `number_of_coders` | Number of coders |
+| `time_to_burnout` | Delay before burnout (ms) |
+| `time_to_compile` | Compilation time (ms) |
+| `time_to_debug` | Debug time (ms) |
+| `time_to_refactor` | Refactor time (ms) |
+| `number_of_compiles_required` | Number of compiles required per coder |
+| `dongle_cooldown` | Rest time for a dongle after release (ms) |
+| `scheduler` | Scheduling strategy: `fifo` or `edf` |
 
-Avant de manipuler le dongle, le coder appelle la fonction 
-`pthread_mutex_lock()` afin de le verrouiller et d'être le seul à accéder à 
-son état (`accessible`, `last_release`, et son tableau de priorité), pour :
+Example:
+```bash
+./codexion 5 800 200 100 100 5 50 fifo
+```
 
-- Vérifier que le nombre de coders ne dépasse pas le nombre maximum autorisé 
-dans le tableau
-- S'enregistrer, et remonter en tête du tableau si sa clé est la plus petite
+## Execution output
+On every event, the program prints a line containing:
 
-Puis valider ces 4 conditions :
+- **The elapsed time** (in milliseconds) since the program started, up to the moment of this print.
+This is a relative time, not an absolute clock time, so that each coder's progress can be easily compared.
+- **The identifier** of the coder involved in the event (their number, e.g. 0, 1, 2...).
+- **The coder's state** at the time of the print, among the following values:
+	- `is compiling` -> The coder has just obtained their 2 dongles and starts compiling.
+	- `is debugging` -> The coder moves to the debug phase.
+	- `is refactoring` -> The coder moves to the refactor phase.
+	- `burned out` -> The coder exceeded their allowed delay without recompiling in time.
 
-- Le dongle est bien accessible
-- Le temps de repos du dongle est écoulé
-- Le coder est bien en tête du tableau de priorité
-- Il n'y a pas de burnout
+## Technical implementation — pthread functions
+**pthread_mutex_init**: initializes the mutex tied to a dongle, before any thread can use it. This is the step where the "lock" is set up.
+- **pthread_mutex_lock**: lets a coder lock a dongle before using it. If the dongle is already taken, the thread waits until it is released. This guarantees that only one coder at a time accesses a shared resource.
+- **pthread_mutex_unlock**: releases the dongle once the coder is done using it, letting another waiting coder claim it in turn.
+- **pthread_mutex_destroy**: properly destroys the mutex at the end of the program, once it is no longer used, to free the associated resources.
+- **pthread_create**: creates a new thread — this is what brings each coder to life as an independent unit of execution.
+- **pthread_join**: waits for a thread to finish before continuing. This is used to make sure all coders have finished before the main program ends.
+- **pthread_cond_init**: initializes the condition variable (doorbell) tied to a dongle, used to wake up a waiting coder as soon as a dongle is released.
+- **pthread_cond_broadcast**: wakes up all coders waiting on the same dongle, rather than just one, which is useful since several coders may potentially compete for the same freed dongle.
+- **pthread_cond_timedwait**: puts a coder to sleep while waiting for a dongle, temporarily releasing the mutex so as not to block other threads. The coder wakes up either because another coder signaled that the dongle was released, or because its deadline was reached (timeout) — which prevents it from waiting indefinitely and allows burnout to be triggered if necessary.
+- **pthread_cond_destroy**: properly destroys the condition variable at the end of the program, once it is no longer used.
 
-Si toutes les conditions ne sont pas validées, la fonction 
-`pthread_cond_timedwait()` permet de mettre le coder en veille, et 
-le réveillera de 2 manières différentes :
+Together, these functions guarantee that no coder can access a dongle already in use by another, which prevents concurrency errors (uncontrolled simultaneous access to the same data), while still allowing the waiting and queueing described in the previous steps.
 
-1. **Par timeout** : réveiller le coder toutes les 50ms pour revérifier 
-les conditions
-2. **Par broadcast** : réveiller le coder dès que le dongle se libère
+## Step-by-step operation
+### Scheduler
+A scheduler is a component that determines, at every instant, which coder is allowed to take the dongles in order to run.
+Two types of strategy can be chosen: FIFO or EDF.
 
-Il pourra alors revérifier si les conditions ci-dessus sont valides.
+- FIFO (First In, First Out): the simplest strategy — "first come, first served." This means the first coder to obtain their dongles gets to run.
+- EDF (Earliest Deadline First): gives priority to the coder whose remaining time before their deadline is the shortest.
 
-Sinon (si les conditions sont valides), le dongle est attribué au coder en tête
-de liste, le tableau de priorité est mis à jour (retrait de la liste d'attente, actualisation de `last_release`, etc.), puis le dongle est déverrouillé avec 
-la fonction `pthread_mutex_unlock()`
-![etape de validation d'acquisition dongle](image_readme/schema_etape_1.5.svg)
-bloquer l'accessibiliter du dongle.
-Cette etape sera effectuer 2 fois.
-Puis faire passer l'etat de acquiring_dongle a compiling
-![acquisition dongle des 2 dongles](image_readme/schema_etape_1.6.svg)
+### Acquiring dongles
+#### Step 1 — The problem
+
+Let's imagine we have 4 coders (threads), each placed between 2 dongles:
+
+![Coders and dongles diagram](image_readme/schema_etape_1.svg)
+
+For a coder to run, it must claim both of its dongles: the left one and the right one.
+The problem appears if all coders try to take their first dongle at exactly the same time: each one manages to lock one, but none manages to get the second, since it is already held by its neighbor.
+
+Result: all coders stay blocked indefinitely, each waiting for a dongle that will never be released.
+This is a **deadlock** — not a crash as such, since the program doesn't stop running, but it stays frozen forever.
+
+![Coders and dongles diagram 1.1](image_readme/deadlock_cycle_dongles.svg)
+
+#### Step 2 — Solution
+To avoid this, every odd-numbered coder starts by trying to take the right-hand dongle, while even-numbered ones take the left-hand one.
+
+#### Example:
+```bash
+Round 0:
+coder[1] -> odd
+coder[1] takes the right dongle
+
+coder[2] -> even
+coder[2] takes the left dongle
+
+coder[3] -> odd
+coder[3] takes the right dongle
+
+coder[4] -> even
+coder[4] takes the left dongle
+```
+
+Consequence: every coder whose id is an odd number starts trying to take its right dongle, and even ones take the left dongle. This solution breaks the cycle while also letting several coders run at the same time, since dongle acquisition is optimized.
+
+Result: each coder ends up competing with its neighbor for the dongle.
+![Dongle acquisition](image_readme/solution_parite_complete.svg)
+
+#### Step 3 — Resolving contention
+The scheduler settles this contention using a strategy:
+	- FIFO: the key represents the coder's arrival time.
+	or
+	- EDF: the key represents the coder's deadline.
+
+Explanation:
+Each dongle has a priority table that associates each of the coders around it with its id and a key.
+This key represents a different value depending on the chosen strategy:
+- For FIFO, the key represents the moment the coder registered in the priority table.
+This means that if an odd-numbered coder registered first, its key will be smaller than its neighbor's, and it will have priority.
+
+![FIFO key explanation](image_readme/creation_cle_fifo_debut.svg)
+
+- For EDF, the key is computed from the time remaining before the coder reaches burnout — in other words, the coder closest to the end has priority.
+
+![EDF key explanation](image_readme/creation_cle_edf_debut.svg)
+
+![Contention resolution](image_readme/zoom_coder1_coder2.svg)
+
+#### Step 4 — Acquiring a dongle in detail
+
+Before touching the dongle, the coder calls `pthread_mutex_lock()` to lock it and be the only one accessing its state (`accessible`, `last_release`, and its priority table), in order to:
+
+- Check that the number of coders doesn't exceed the maximum allowed in the table
+- Register itself, and move to the front of the table if its key is the smallest
+
+Then check these 4 conditions:
+
+- The dongle is accessible
+- The dongle's rest (cooldown) time has elapsed
+- The coder is at the front of the priority table
+- No burnout has occurred
+
+If any of these conditions is not met, `pthread_cond_timedwait()` puts the coder to sleep, and it will be woken up in 2 different ways:
+
+1. **By timeout**: the coder is woken up every 50ms to recheck the conditions
+2. **By broadcast**: the coder is woken up as soon as the dongle is released
+
+It then rechecks whether the conditions above are met.
+
+Otherwise (if the conditions are met), the dongle is assigned to the coder at the front of the list, the priority table is updated (removal from the waiting list, `last_release` refreshed, etc.), and the dongle is unlocked with `pthread_mutex_unlock()`.
+![dongle acquisition validation step](image_readme/acquisition_dongle.svg)
+This step is carried out twice, once per dongle.
+The coder's state then moves from acquiring_dongle to compiling.
+![acquiring both dongles](image_readme/liens_perdus_impairs.svg)
 
 ## Compiling
 
-Le compiling consiste à :
+Compiling consists of:
 
-- Afficher le message "is compiling" et l'instant
-- Enregistrer l'instant de début de compilation (utilisé pour le burnout et l'EDF)
-- Simuler la durée de la compilation via usleep()
-- Pour chaque dongle (gauche puis droite) : débloquer son accessibilité, enregistrer l'instant de relâchement, puis réveiller les coders en attente sur ce dongle via pthread_cond_broadcast()
-- Incrémenter le nombre de compilations effectuées par le coder
-- Faire passer l'état de compiling à debugging
+- Printing the "is compiling" message with the timestamp
+- Recording the compile start time (used for burnout and EDF)
+- Simulating the compile duration with usleep()
+- For each dongle (left then right): marking it as no longer accessible, recording the release time, then waking up the coders waiting on that dongle via pthread_cond_broadcast()
+- Incrementing the coder's completed compile count
+- Moving the state from compiling to debugging
 
-tout en protégeant chaque étape qui touche une donnée partagée par le mutex correspondant (coder ou dongle).
-![schema de compilation](image_readme/schema_etape_compile.svg)
+All of this while protecting every step that touches shared data with the corresponding mutex (coder or dongle).
+![compiling diagram](image_readme/schema_etape_compile.svg)
 
-## Debugging et refactoring
+## Debugging and refactoring
 
-Debugging et refactoring font exactement la meme chose:
-- Afficher le message "is debugging" ou "is refactoring", l'instant, l'identifiant du coder
-- Simuler la durée simulée est time_to_debug / time_to_refactor usleep()
-- changement de status
-tous securisant pthread_mutex_unlock/pthread_mutex_unlock
-![schema debbug/refacto](image_readme/schema_debug_refacto.svg)
+Debugging and refactoring do exactly the same thing:
+- Print the "is debugging" or "is refactoring" message, the timestamp, and the coder's id.
+- Simulate the duration with usleep() (time_to_debug / time_to_refactor)
+- Change the state
+
+All of this secured with pthread_mutex_lock/pthread_mutex_unlock.
+![debug/refactor diagram](image_readme/schema_debug_refacto.svg)
 
 ## Burnout
 
-Le burnout est surveillé par un thread dédié (monitor_thread), lancé en parallèle des threads coders, dont le rôle est de vérifier en continu qu'aucun coder ne reste trop longtemps sans avoir recompilé.
-Condition d'arrêt
+Burnout is monitored by a dedicated thread (monitor_thread), started alongside the coder threads, whose job is to continuously check that no coder goes too long without recompiling.
 
-Le thread tourne tant que le nombre total de compilations effectuées par tous les coders n'a pas atteint la cible (nombre_de_coders * nombre_de_compiles_required). Ce total est recalculé à chaque tour de boucle en sommant le number_of_compiles de chaque coder — la surveillance s'arrête donc naturellement une fois que tout le monde a atteint son quota, sans qu'aucun burnout ne se soit produit.
-Détection
+### Monitor logic
 
-À chaque tour, pour chaque coder, le thread calcule le temps écoulé depuis le début de sa dernière compilation (maintenant - last_compile_start). Si ce temps dépasse le délai autorisé (time_to_burnout), cela signifie que le coder est resté trop longtemps sans recompiler (par exemple bloqué en attente de ses dongles) : il "burnout".
+**Stop condition**:
+The thread keeps running as long as the total number of compiles completed by all coders hasn't reached the target (number_of_coders * number_of_compiles_required).
+This total is recalculated on every loop iteration by summing each coder's number_of_compiles — so monitoring stops naturally once everyone has reached their quota, without any burnout having occurred.
 
-Conséquences du burnout
+**Detection**:
+On every iteration, for each coder, the thread computes the time elapsed since the start of their last compile (now - last_compile_start).
+If this exceeds the allowed delay (time_to_burnout), it means the coder went too long without recompiling (e.g. stuck waiting for their dongles): they "burn out".
 
-Dès qu'un burnout est détecté :
-- le statut du coder passe à BURNOUT
-- un message est loggé ("burned out")
-- le flag global hall->burnout passe à 1
-- le thread de surveillance s'arrête immédiatement
+**Consequences of burnout**:
+As soon as a burnout is detected:
+- the coder's status becomes BURNOUT
+- a message is logged ("burned out")
+- the global hall->burnout flag is set to 1
+- the monitor thread stops immediately
 
-Ce flag est ensuite lu par tous les autres threads en attente : chaque coder arrête sa boucle principale, et tout coder en attente d'un dongle arrête d'attendre. Un seul burnout suffit donc à stopper proprement toute la simulation, sans laisser de thread tourner indéfiniment.
+This flag is then read by all other waiting threads: every coder stops its main loop, and any coder waiting for a dongle stops waiting.
+A single burnout is therefore enough to cleanly stop the whole simulation, without leaving any thread running indefinitely.
 
-Fréquence et protection
+**Frequency and protection**:
+The check runs every 5ms (usleep(5000)). Each read of a coder's data is protected by its own mutex, and writing to the global burnout flag is protected by a dedicated mutex — two separate locks for two separate pieces of data.
+![burnout monitor diagram](image_readme/schema_burnout_monitor.svg)
 
-La vérification se fait toutes les 5ms (usleep(5000)). Chaque lecture des données d'un coder est protégée par son propre mutex, et l'écriture du flag global de burnout est protégée par un mutex dédié — deux verrous distincts pour deux données distinctes.
-![schema burnout](image_readme/schema_burnout_monitor.svg)
+## Blocking cases handled
+
+- **Deadlock prevention (Coffman's conditions)** — Classic deadlock happens when all coders grab their first dongle at the same time and wait forever for the second (circular wait). This is prevented by breaking the *circular wait* condition: odd-numbered coders always try their right dongle first, even-numbered coders always try their left dongle first. This asymmetric acquisition order removes the cycle, since two neighbors can never both be waiting on each other in the same direction.
+- **Starvation prevention** — Each dongle keeps a priority table of the coders around it. A coder can only take the dongle once it is at the front of that table (smallest key: earliest arrival for FIFO, closest deadline for EDF). Because the key strictly orders who goes next, no coder can be repeatedly skipped by later arrivals — it only has to wait for coders that were already ahead of it.
+- **Cooldown handling** — After releasing a dongle, its `last_release` timestamp is recorded under the dongle's mutex. A coder trying to reacquire it must wait until `dongle_cooldown` ms have passed since that timestamp; this condition is checked together with the other acquisition conditions in `pthread_cond_timedwait`'s wake-up loop.
+- **Precise burnout detection** — A dedicated monitor thread checks every coder every 5ms, comparing `now - last_compile_start` to `time_to_burnout`. Each coder's data is read under its own mutex, keeping detection both frequent and race-free.
+- **Log serialization** — All log output goes through a single function guarded by a dedicated log mutex, so one coder's full log line is always written atomically before another can start. The data being logged (coder/dongle state) is read separately under its own mutex before the log call.
+
+## Thread synchronization mechanisms
+
+This project relies on three POSIX primitives: `pthread_mutex_t` for mutual exclusion, `pthread_cond_t` for wait/wake-up signaling, and `pthread_create`/`pthread_join` to manage the coder and monitor threads. Each shared resource — dongles, the log output, and the monitor's burnout flag — is protected by its own dedicated mutex, so a lock held for one resource never blocks access to another.
+
+**Dongles** — Each dongle has its own `pthread_mutex_t` protecting its state (`accessible`, `last_release`, priority table) and its own `pthread_cond_t` used as a "doorbell". A coder locks the mutex, checks all four acquisition conditions (accessible, cooldown elapsed, at the front of the priority table, no burnout) and either claims the dongle immediately or calls `pthread_cond_timedwait()` to sleep until woken by a `pthread_cond_broadcast()` (fired when the dongle is released) or by its own 50ms timeout. Locking the mutex around the whole check-and-claim sequence is what prevents the race condition where two coders could both see the dongle as "accessible" and both claim it: only the coder holding the mutex can read and update the state, so the check and the claim happen as a single atomic step.
+
+**Logging** — A dedicated log mutex is locked around the entire print call, so two threads logging at the same moment can never interleave their output into a single garbled line. The coder/dongle data being printed is read beforehand under its own mutex; the log mutex only serializes the write itself.
+
+**Monitor state** — The global burnout flag is protected by its own mutex, separate from every coder's mutex and every dongle's mutex. The monitor thread writes to it once, under this mutex, the instant it detects a burnout; every coder and the monitor itself read it the same way before deciding whether to keep waiting or looping. This is the thread-safe channel through which the monitor communicates a burnout to every coder thread: as soon as the flag is set, any coder currently blocked in `pthread_cond_timedwait()` re-checks it on its next wake-up (broadcast or timeout) and exits its wait loop instead of claiming a dongle.
+
+## Resources
+
+Most of the research and technical understanding behind this project (mutexes, condition variables, FIFO/EDF scheduling, deadlock handling...) was built with the help of AI, along with discussions with other students at school for overall understanding of the subject and testing.
