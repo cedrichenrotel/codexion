@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor_burnout.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 13:12:30 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/31 15:41:05 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/03 08:45:52 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	*monitor_burnout(void *arg)
 		if (current_total == total_compiles_required)
 			break ;
 		check_burnout(hall, &current_total);
+		if (hall->burnout == 1)
+			break;
 		if (current_total >= total_compiles_required)
 			break ;
 		usleep(5000);
