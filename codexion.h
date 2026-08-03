@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/03 08:23:04 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/03 15:43:59 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ void		compiling(t_coders *coder);
 void		*monitor_burnout(void *arg);
 void		free_mutex_hall(t_hall *hall);
 void		free_coder(t_hall *hall, int index);
+void		log_line(t_coders *coder, char *msg);
 void		free_dongle(t_hall *hall, int index);
 void		heap_swap(t_heap *heap, int a, int b);
 void		print_log(t_coders *coder, char *msg);

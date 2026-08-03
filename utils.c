@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 17:16:13 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/31 14:36:02 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/03 15:41:01 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,15 @@ long long	timer(t_coders *coder)
 
 void	print_log(t_coders *coder, char *msg)
 {
+	if (coder->hall->burnout == 0)
+		log_line(coder, msg);
+}
+
+void	log_line(t_coders *coder, char *msg)
+{
 	pthread_mutex_lock(&coder->hall->secu_log);
 	printf("%lld %d %s\n", timer(coder), coder->id_coder, msg);
 	pthread_mutex_unlock(&coder->hall->secu_log);
-}
-
-void	change_status(t_coders *coder, t_status status)
-{
-	pthread_mutex_lock(&coder->acces_coder);
-	coder->current_status = status;
-	pthread_mutex_unlock(&coder->acces_coder);
 }
 
 void	heap_swap(t_heap *heap, int a, int b)

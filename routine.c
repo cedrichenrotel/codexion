@@ -3,19 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 09:27:19 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/31 14:10:31 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/03 15:30:48 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 #include <unistd.h>
 
+void	change_status(t_coders *coder, t_status status)
+{
+	pthread_mutex_lock(&coder->acces_coder);
+	coder->current_status = status;
+	pthread_mutex_unlock(&coder->acces_coder);
+}
+
 void	simulate_phase(t_coders *coder, char *msg, t_status status,
 			long long time)
-	{
+{
 	print_log(coder, msg);
 	usleep(time * 1000);
 	change_status(coder, status);
@@ -39,6 +46,8 @@ void	*routine(void *arg)
 	t_coders	*coder;
 
 	coder = (t_coders *)arg;
+	if ((coder->id_coder - 1) % 2 == 0)
+				usleep(15);
 	while (execution_condition(coder))
 	{
 		if (coder->current_status == ACQUIRING_DONGLES)
