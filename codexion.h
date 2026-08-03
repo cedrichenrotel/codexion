@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/31 14:40:49 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/03 08:23:04 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct s_dongle
 {
 	int					accessible;
 	int					index;
-	long long			last_release; // dernier relachement
+	long long			last_release;
 	pthread_mutex_t		acces_dongle;
 	pthread_cond_t		doorbell;
 	t_heap				*tab_priority;
@@ -51,7 +51,7 @@ typedef struct s_dongle
 typedef struct s_coders
 {
 	int					id_coder;
-	long long			last_compile_start; // derniere compilation
+	long long			last_compile_start;
 	int					number_of_compiles;
 	t_status			current_status;
 	pthread_t			thread;
@@ -65,10 +65,8 @@ typedef struct s_coders
 typedef struct s_hall
 {
 	pthread_mutex_t				secu_log;
-	// protege le compteur partager contre simultaner par plusieurs threads
 	pthread_mutex_t				secu_nb_pass;
 	pthread_mutex_t				secu_burnout;
-	// sert a reveiller un codeur qui attend un badge
 	pthread_cond_t				doorbell_pass;
 	pthread_t					monitor_thread;
 	t_dongle					*dongles;
