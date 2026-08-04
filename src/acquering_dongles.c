@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 11:47:24 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/04 08:42:51 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 11:06:40 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	aquiring_dongles(t_coders *coder)
 		registration_id_heap(coder, second, key);
 	if (!acquire_one_dongle(coder, first))
 		return (ERROR);
-	if (second != first && !acquire_one_dongle(coder, second))
+	if (!acquire_one_dongle(coder, second))
 		return (ERROR);
 	change_status(coder, COMPILING);
 	return (SUCCESS);
