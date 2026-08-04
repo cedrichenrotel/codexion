@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 13:12:30 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/04 14:36:11 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 15:00:40 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static	void	*check_burnout(t_hall *hall, int *current_total)
 	{
 		pthread_mutex_lock(&hall->coders[i].acces_coder);
 		time_elapsed = get_time_ms() - hall->coders[i].last_compile_start;
-		if (time_elapsed >= hall->time_to_burnout)
+		if (time_elapsed > hall->time_to_burnout)
 		{
 			pthread_mutex_unlock(&hall->coders[i].acces_coder);
 			change_status(&hall->coders[i], BURNOUT);

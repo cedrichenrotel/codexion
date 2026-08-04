@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 17:23:04 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/03 14:20:17 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 14:59:12 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ static	void	release_dongles(t_dongle *dongle)
 and changes the status to move on to the next stage*/
 void	compiling(t_coders *coder)
 {
-	print_log(coder, "is compiling");
 	pthread_mutex_lock(&coder->acces_coder);
 	coder->last_compile_start = get_time_ms();
 	pthread_mutex_unlock(&coder->acces_coder);
+	print_log(coder, "is compiling");
 	usleep(coder->hall->time_to_compile * 1000);
 	release_dongles(coder->right_dongle);
 	release_dongles(coder->left_dongle);
