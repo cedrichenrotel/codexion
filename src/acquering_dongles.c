@@ -79,9 +79,9 @@ static	int	acquire_one_dongle(t_coders *coder, t_dongle *dongle)
 	}
 	heap_pop(dongle->tab_priority);
 	dongle->accessible = 0;
+	pthread_mutex_unlock(&coder->hall->secu_burnout);
 	print_log(coder, "has taken a dongle");
 	pthread_mutex_unlock(&dongle->acces_dongle);
-	pthread_mutex_unlock(&coder->hall->secu_burnout);
 	return (SUCCESS);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cehenrot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 14:35:13 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/07/31 12:19:34 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 09:32:43 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static	int	parse_arg(char *arg, int index, int argc)
 			return (print_error_parse("The argument is not a number", arg));
 		i++;
 	}
-	if (index == 1 && atoi(arg) < 1)
+	if ((index == 1 || index == 6) && atoi(arg) < 1)
 		return (print_error_parse("Insufficient number of encoders", arg));
 	if ((index != argc - 1 && !validation_numbers(arg))
 		|| (index == argc - 1 && !validation_scheduler(arg)))

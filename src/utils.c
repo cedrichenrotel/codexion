@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 17:16:13 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/03 15:41:01 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 09:30:01 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ long long	timer(t_coders *coder)
 
 void	print_log(t_coders *coder, char *msg)
 {
-	if (coder->hall->burnout == 0)
+	if (!burnout(coder->hall))
 		log_line(coder, msg);
 }
 
