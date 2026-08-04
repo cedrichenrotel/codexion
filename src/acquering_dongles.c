@@ -99,10 +99,11 @@ int	aquiring_dongles(t_coders *coder)
 	else
 		key = get_time_ms();
 	registration_id_heap(coder, first, key);
-	registration_id_heap(coder, second, key);
+	if (second != first)
+		registration_id_heap(coder, second, key);
 	if (!acquire_one_dongle(coder, first))
 		return (ERROR);
-	if (!acquire_one_dongle(coder, second))
+	if (second != first && !acquire_one_dongle(coder, second))
 		return (ERROR);
 	change_status(coder, COMPILING);
 	return (SUCCESS);
