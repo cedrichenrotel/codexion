@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/14 11:09:21 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/03 15:43:59 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 08:34:50 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ void		heap_swap(t_heap *heap, int a, int b);
 void		print_log(t_coders *coder, char *msg);
 void		change_status(t_coders *coder, t_status status);
 
+int			burnout(t_hall *hall);
 int			heap_pop(t_heap *heap);
 int			run_coders(t_hall *hall);
 int			init_coders(t_hall *hall);

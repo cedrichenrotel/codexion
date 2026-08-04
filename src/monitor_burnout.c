@@ -6,12 +6,22 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 13:12:30 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/03 14:27:00 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 08:40:14 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 #include <unistd.h>
+
+int	burnout(t_hall *hall)
+{
+	int	burnout;
+
+	pthread_mutex_lock(&hall->secu_burnout);
+	burnout = hall->burnout;
+	pthread_mutex_unlock(&hall->secu_burnout);
+	return (burnout);
+}
 
 static	void	*check_burnout(t_hall *hall, int *current_total)
 {
@@ -28,8 +38,8 @@ static	void	*check_burnout(t_hall *hall, int *current_total)
 			pthread_mutex_unlock(&hall->coders[i].acces_coder);
 			change_status(&hall->coders[i], BURNOUT);
 			pthread_mutex_lock(&hall->secu_burnout);
-			hall->burnout = 1;
 			print_log(&hall->coders[i], "burned out");
+			hall->burnout = 1;
 			pthread_mutex_unlock(&hall->secu_burnout);
 			return (NULL);
 		}
@@ -57,7 +67,7 @@ void	*monitor_burnout(void *arg)
 			break ;
 		check_burnout(hall, &current_total);
 		if (hall->burnout == 1)
-			break;
+			break ;
 		if (current_total >= total_compiles_required)
 			break ;
 		usleep(5000);

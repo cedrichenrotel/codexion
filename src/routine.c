@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 09:27:19 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/03 15:30:48 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 08:38:15 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	simulate_phase(t_coders *coder, char *msg, t_status status,
 /*condition that causes the loop in routine() to stop*/
 static	int	execution_condition(t_coders *coder)
 {
-	return (coder->hall->burnout == 0 && coder->number_of_compiles
+	return (!burnout(coder->hall) && coder->number_of_compiles
 		< coder->hall->number_of_compiles_required);
 }
 
@@ -47,7 +47,7 @@ void	*routine(void *arg)
 
 	coder = (t_coders *)arg;
 	if ((coder->id_coder - 1) % 2 == 0)
-				usleep(15);
+		usleep(15);
 	while (execution_condition(coder))
 	{
 		if (coder->current_status == ACQUIRING_DONGLES)

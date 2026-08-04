@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# Build output
+/codexion
+
 # Object files
 *.o
 *.ko
