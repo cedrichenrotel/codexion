@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 09:27:19 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/04 08:38:15 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 14:34:59 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void	*routine(void *arg)
 	t_coders	*coder;
 
 	coder = (t_coders *)arg;
-	if ((coder->id_coder - 1) % 2 == 0)
-		usleep(15);
+	if (coder->id_coder % 2 == 0)
+		usleep(500);
 	while (execution_condition(coder))
 	{
 		if (coder->current_status == ACQUIRING_DONGLES)

@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 13:12:30 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/04 09:38:34 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 14:36:11 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	*monitor_burnout(void *arg)
 			break ;
 		if (current_total >= total_compiles_required)
 			break ;
-		usleep(5000);
+		usleep(500);
 	}
 	return (NULL);
 }
