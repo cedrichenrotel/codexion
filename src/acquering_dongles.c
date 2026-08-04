@@ -6,7 +6,7 @@
 /*   By: cehenrot <cehenrot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 11:47:24 by cehenrot          #+#    #+#             */
-/*   Updated: 2026/08/04 14:32:05 by cehenrot         ###   ########.fr       */
+/*   Updated: 2026/08/04 15:39:04 by cehenrot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ static	int	acquire_one_dongle(t_coders *coder, t_dongle *dongle)
 	pthread_mutex_lock(&dongle->acces_dongle);
 	while (!burnout(coder->hall) && dongle_not_ready(coder, dongle))
 	{
-		cooldown_time.tv_sec = get_time_ms() / 1000;
-		cooldown_time.tv_nsec = (get_time_ms() % 1000) * 1000000;
+		cooldown_time.tv_sec = (get_time_ms() + 5) / 1000;
+		cooldown_time.tv_nsec = ((get_time_ms() + 5) % 1000) * 1000000;
 		pthread_cond_timedwait(&dongle->doorbell, &dongle->acces_dongle,
 			&cooldown_time);
 	}
@@ -104,7 +104,10 @@ int	aquiring_dongles(t_coders *coder)
 	if (!acquire_one_dongle(coder, first))
 		return (ERROR);
 	if (!acquire_one_dongle(coder, second))
+	{
+		release_dongles(first);
 		return (ERROR);
+	}
 	change_status(coder, COMPILING);
 	return (SUCCESS);
 }

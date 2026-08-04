@@ -33,8 +33,8 @@ static	int	validation_numbers(char *numbers)
 
 	len_numbers = strlen(numbers);
 	if (numbers[0] == '0' && len_numbers > 1)
-		return (print_error_parse("Invalide number"
-				"A leading '0' is not permitted\n", numbers));
+		return (print_error_parse("Invalid number: "
+				"a leading '0' is not permitted", numbers));
 	if (len_numbers > 10)
 		return (print_error_parse("The numeric value is too long to be "
 				"converted to an integer", numbers));
@@ -72,7 +72,7 @@ int	parse_intput(int argc, char **argv)
 	if (argc != 9)
 	{
 		fprintf(stderr,
-			"[ERROR] parser.py: "
+			"[ERROR] parser.c: "
 			"Invalid number of arguments -> %d/9\n", argc);
 		return (ERROR);
 	}

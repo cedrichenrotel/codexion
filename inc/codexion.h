@@ -102,6 +102,7 @@ typedef struct s_heap
 
 void		*routine(void *arg);
 void		compiling(t_coders *coder);
+void		release_dongles(t_dongle *dongle);
 void		*monitor_burnout(void *arg);
 void		free_mutex_hall(t_hall *hall);
 void		free_coder(t_hall *hall, int index);

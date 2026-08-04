@@ -14,9 +14,9 @@
 #include <unistd.h>
 
 /*locks the mutex for this dongle, makes it accessible again at 1, logs the time
-broadcasts (to wake up the coders) to see who’s at the top of the list, and 
+broadcasts (to wake up the coders) to see who’s at the top of the list, and
 unlocks the mutexx */
-static	void	release_dongles(t_dongle *dongle)
+void	release_dongles(t_dongle *dongle)
 {
 	pthread_mutex_lock(&dongle->acces_dongle);
 	dongle->accessible = 1;
